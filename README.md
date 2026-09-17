@@ -27,6 +27,7 @@ The design system is Lyons' own, "red rock and river" (see the top of
 | `/` | Home: hero, quick links, "This weekend" module with the live river chip, coming-up events, explore cards, FAQ, trip and live-here panels |
 | `/explore/` | Five places in walking order: Main Street, the river and parks, trails, public art and the museum, Planet Bluegrass |
 | `/eat-shop/` | Searchable, filterable business directory rendered from `src/data/businesses.json`, with a map |
+| `/itineraries/` | Five step-by-step days from `src/data/itineraries.json`; cards on Home and Explore with a "Good now" tag by month |
 | `/stay/` | Lodging cards from the directory, the Town campground, festival-weekend advice, nearby towns, a map |
 | `/outdoors/` | The live St. Vrain level (Colorado DWR gauge SVCLYOCO) with plain-language tubing levels, the whitewater park, fishing, a trail table for five areas, a map |
 | `/events/` | Upcoming list, month calendar, annual fixtures and the weekly rhythm, from `src/data/events.json` |
@@ -58,6 +59,8 @@ JSON meta block, then its body. Photographs are placed with
   first/third-Monday fixtures live in `series` and are expanded by the build.
   Past events drop off the upcoming lists automatically in the browser; rebuild
   periodically so the calendar horizon rolls forward.
+- **The month module**: `src/data/now.json` has one entry per month; the build writes the current month and the browser re-picks by its own date.
+- **An itinerary**: add an object to `src/data/itineraries.json` (steps, tips, months); it renders on `/itineraries/` and as a card.
 - **A photo**: drop a JPEG into a folder and run `node tools/images.mjs <folder>`
   (needs `npm i sharp`), then credit it on `/privacy/#photos`.
 

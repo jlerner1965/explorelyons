@@ -542,3 +542,26 @@ legend { padding: 0; }
 .l-stay-card { padding-top: 16px; border-top: 3px solid var(--l-gold); background-image: linear-gradient(var(--l-sandstone), var(--l-sandstone)); background-size: 100% 1px; background-repeat: no-repeat; background-position: 0 2px; }
 .l-stay-card .l-h3 { color: var(--l-redrock); }
 @media (max-width: 900px) { .l-stay-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- second discovery pass: itineraries and the month module ---- */
+.l-now { padding: clamp(18px, 2.5vw, 28px); border-left: 4px solid var(--l-gold); background: var(--l-paper); }
+.l-now p { margin: 10px 0 0; max-width: 72ch; font-size: .9375rem; }
+.l-now [data-now-links] { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 12px; }
+.l-bg-paper .l-now, .l-bg-sand .l-now { background: var(--l-white); }
+.l-itin-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(14px, 2vw, 24px); margin-top: clamp(20px, 2.5vw, 32px); }
+@media (max-width: 1100px) { .l-itin-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .l-itin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .l-itin-grid { grid-template-columns: minmax(0, 1fr); } }
+.l-itin-card { padding-top: 14px; border-top: 3px solid var(--l-sandstone); background-image: linear-gradient(var(--l-gold), var(--l-gold)); background-size: 100% 1px; background-repeat: no-repeat; background-position: 0 2px; }
+.l-itin-card:nth-child(even) { border-top-color: var(--l-river); background-image: linear-gradient(var(--l-river-lt), var(--l-river-lt)); }
+.l-itin-card img { width: 100%; height: clamp(120px, 12vw, 170px); object-fit: cover; clip-path: polygon(var(--l-chamfer) 0, 100% 0, 100% calc(100% - var(--l-chamfer)), calc(100% - var(--l-chamfer)) 100%, 0 100%, 0 var(--l-chamfer)); }
+.l-itin-card .l-h3 { margin-top: 6px; font-size: 1.1875rem; color: var(--l-redrock); }
+.l-itin-card a:hover .l-h3 { color: var(--l-sandstone-ink); }
+.l-tag { display: inline-block; margin-top: 10px; padding: 3px 8px; background: var(--l-sky-pale); color: var(--l-river-ink); font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.l-itin { padding-block: clamp(36px, 5vw, 72px); border-top: 1px solid var(--l-rule); }
+.l-itin:nth-of-type(even) { background: var(--l-paper); }
+.l-steps { list-style: none; margin: 0; padding: 0; }
+.l-step { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 16px; padding: 16px 0; border-top: 1px solid var(--l-rule); }
+.l-step:first-child { border-top: 2px solid var(--l-redrock); }
+.l-step-when { font-family: var(--l-serif); font-style: italic; font-size: 1.125rem; line-height: 1.3; color: var(--l-sandstone); font-variation-settings: "opsz" 36; }
+@media (max-width: 600px) { .l-step { grid-template-columns: minmax(0, 1fr); gap: 4px; } }

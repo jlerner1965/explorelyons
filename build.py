@@ -279,6 +279,143 @@ def pins_for(pins, which):
     return pins
 
 
+def render_itineraries(data):
+    out = []
+    for it in data["itineraries"]:
+        steps = "".join(
+            f'<li class="l-step"><div class="l-step-when">{html.escape(st["when"])}</div><div>'
+            f'<h3 class="l-h3" style="font-size:1.25rem;color:var(--l-redrock)">{html.escape(st["title"])}</h3>'
+            f'<p class="l-body" style="margin:8px 0 0;font-size:.9375rem;max-width:60ch">{html.escape(st["detail"])}</p>'
+            + (f'<a class="l-link" href="{html.escape(st["href"])}" style="display:inline-block;margin-top:8px">Details <span aria-hidden="true">&#8594;</span></a>' if st.get("href") else "")
+            + "</div></li>"
+            for st in it["steps"]
+        )
+        tips = "".join(f"<li>{html.escape(t)}</li>" for t in it.get("tips", []))
+        out.append(
+            f'<section class="l-itin" id="{it["slug"]}" aria-labelledby="{it["slug"]}-h">'
+            f'<div class="l-wrap"><div class="l-g2-wide" style="align-items:start">'
+            f'<div><div class="l-label">{html.escape(it["kicker"])}</div>'
+            f'<h2 class="l-h2" id="{it["slug"]}-h" style="margin-top:12px;color:var(--l-redrock)">{html.escape(it["title"])}</h2>'
+            f'<p class="l-lead" style="margin:14px 0 0;max-width:46ch">{html.escape(it["blurb"])}</p>'
+            f'<dl class="l-dl"><div><dt>Best for</dt><dd>{html.escape(it["best_for"])}</dd></div>'
+            f'<div><dt>Season</dt><dd>{html.escape(it["season"])}</dd></div>'
+            f'<div><dt>Getting around</dt><dd>{html.escape(it["getting_around"])}</dd></div></dl>'
+            f'<figure class="l-photo-natural" style="margin:22px 0 0">{{{{pic name="{it["photo"]}" alt="{html.escape(it["alt"], quote=True)}" sizes="(max-width: 900px) calc(100vw - 48px), 36vw"}}}}</figure>'
+            f'</div>'
+            f'<div><ol class="l-steps">{steps}</ol>'
+            + (f'<div class="l-callout l-callout--paper" style="margin-top:22px"><div class="l-label">Worth knowing</div><ul class="l-body" style="margin:10px 0 0;padding-left:18px;font-size:.9375rem">{tips}</ul></div>' if tips else "")
+            + "</div></div></div></section>"
+        )
+    return "".join(out)
+
+
+def render_itinerary_cards(data):
+    cards = []
+    for it in data["itineraries"]:
+        cards.append(
+            f'<article class="l-itin-card" data-months="{" ".join(str(m) for m in it["months"])}">'
+            f'<a href="/itineraries/#{it["slug"]}" style="display:block;text-decoration:none">'
+            f'{{{{pic name="{it["photo"]}" alt="{html.escape(it["alt"], quote=True)}" sizes="(max-width: 520px) calc(100vw - 48px), (max-width: 1100px) 30vw, 18vw"}}}}'
+            f'<div class="l-label" style="margin-top:12px;font-size:11px">{html.escape(it["kicker"])}</div>'
+            f'<h3 class="l-h3">{html.escape(it["title"])}</h3>'
+            f'<p class="l-body" style="margin:6px 0 0;font-size:.875rem">{html.escape(it["blurb"].split(". ")[0])}.</p>'
+            f'<span class="l-tag" data-good-now hidden>Good now</span>'
+            f'</a></article>'
+        )
+    return "".join(cards)
+
+
+def render_now(data):
+    m = data["months"][str(TODAY.month)]
+    links = " ".join(f'<a class="l-link" href="{html.escape(h)}"{" rel=noopener" if h.startswith("http") else ""}>{html.escape(t)} <span aria-hidden="true">{"&#8599;" if h.startswith("http") else "&#8594;"}</span></a>' for t, h in m["links"])
+    payload = json.dumps(data["months"], ensure_ascii=False).replace("</", "<\\/")
+    return (
+        f'<div class="l-now" data-now data-now-month="{TODAY.month}">'
+        f'<div class="l-label" style="color:var(--l-sandstone-ink)">Right now</div>'
+        f'<h2 class="l-h3" data-now-headline style="margin-top:8px;color:var(--l-redrock)">{html.escape(m["headline"])}</h2>'
+        f'<p class="l-body" data-now-body>{html.escape(m["body"])}</p>'
+        f'<div data-now-links>{links}</div>'
+        f'<script type="application/json" data-now-data>{payload}</script>'
+        f'</div>'
+    )
+
+
+def denver_iso(date_str, hhmm):
+    try:
+        from zoneinfo import ZoneInfo
+        h, mnt = hhmm.split(":")
+        d = dt.date.fromisoformat(date_str)
+        return dt.datetime(d.year, d.month, d.day, int(h), int(mnt), tzinfo=ZoneInfo("America/Denver")).isoformat()
+    except Exception:
+        return f"{date_str}T{hhmm}:00-06:00"
+
+
+def events_ld(occ, days=60, cap=40):
+    items = []
+    end = TODAY + dt.timedelta(days=days)
+    for o in occ:
+        d = dt.date.fromisoformat(o["date"])
+        if d < TODAY or d > end:
+            continue
+        ev = {
+            "@type": "Event",
+            "name": o["title"],
+            "startDate": denver_iso(o["date"], o.get("sort", "09:00")),
+            "eventStatus": "https://schema.org/EventScheduled",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+            "location": {"@type": "Place", "name": o.get("venue", "Lyons, Colorado"), "address": {"@type": "PostalAddress", "streetAddress": o.get("address", ""), "addressLocality": "Lyons", "addressRegion": "CO", "postalCode": "80540", "addressCountry": "US"}},
+        }
+        if o.get("organizer"):
+            ev["organizer"] = {"@type": "Organization", "name": o["organizer"]}
+        if o.get("detail"):
+            ev["description"] = o["detail"]
+        if o.get("url"):
+            ev["url"] = o["url"]
+        if o.get("cost") and o["cost"].lower().startswith(("free", "no cover")):
+            ev["isAccessibleForFree"] = True
+        items.append(ev)
+        if len(items) >= cap:
+            break
+    return items
+
+
+def attractions_ld(places):
+    return {
+        "@type": "ItemList",
+        "name": "Places in and around Lyons, Colorado",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "item": {"@type": "TouristAttraction", "name": p["name"], "description": p.get("blurb", ""), "url": (SITE + p["href"]) if p.get("href") else p.get("url"), "geo": {"@type": "GeoCoordinates", "latitude": p["lat"], "longitude": p["lng"]}}}
+            for i, p in enumerate(places["places"])
+        ],
+    }
+
+
+def trips_ld(data):
+    return [
+        {
+            "@type": "TouristTrip",
+            "name": it["title"],
+            "description": it["blurb"],
+            "url": f"{SITE}/itineraries/#{it['slug']}",
+            "touristType": it["best_for"],
+            "itinerary": {"@type": "ItemList", "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": st["title"], "description": st["detail"]} for i, st in enumerate(it["steps"])]},
+        }
+        for it in data["itineraries"]
+    ]
+
+
+FAQ_RE = re.compile(r'<h3 class="l-h3">(.*?)</h3>\s*<p class="l-body">(.*?)</p>', re.S)
+
+
+def faq_ld(body):
+    m = re.search(r'<div class="l-faq">(.*?)</div>\s*</div>\s*</section>', body, re.S)
+    if not m:
+        return None
+    qa = FAQ_RE.findall(m.group(1))
+    strip = lambda t: html.unescape(re.sub(r"<[^>]+>", "", t)).strip()
+    return {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": strip(q), "acceptedAnswer": {"@type": "Answer", "text": strip(a)}} for q, a in qa]}
+
+
 # --------------------------------------------------------------- pages ----
 
 META_RE = re.compile(r"^<!--meta\s*(\{.*?\})\s*-->\s*", re.S)
@@ -295,7 +432,7 @@ def crumbs(meta):
     )
 
 
-def jsonld(meta):
+def jsonld(meta, extra=None):
     graph = [{
         "@type": "WebSite",
         "name": "ExploreLyons.com",
@@ -333,7 +470,8 @@ def jsonld(meta):
                 {"@type": "ListItem", "position": 2, "name": meta["crumb"], "item": SITE + meta["path"]},
             ],
         })
-    return json.dumps({"@context": "https://schema.org", "@graph": graph})
+    graph.extend(extra or [])
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/")
 
 
 def build():
@@ -353,6 +491,11 @@ def build():
     directory = render_directory(biz)
     stay_cards = render_stay(biz)
     pins = build_pins(biz, places)
+    itins = load_json("itineraries.json")
+    now = load_json("now.json")
+    itineraries_html = render_itineraries(itins)
+    itinerary_cards = render_itinerary_cards(itins)
+    now_module = render_now(now)
     upcoming_json = json.dumps([
         {k: o.get(k) for k in ("id", "title", "date", "time", "venue", "address", "organizer", "cost", "detail", "url")}
         for o in occ if o["date"] >= TODAY.isoformat()
@@ -372,6 +515,9 @@ def build():
         body = body.replace("{{upcoming_home}}", render_upcoming(occ, 3, "link"))
         body = body.replace("{{weekend_list}}", render_upcoming(occ, 6, "link"))
         body = body.replace("{{stay_cards}}", stay_cards)
+        body = body.replace("{{itineraries}}", itineraries_html)
+        body = body.replace("{{itinerary_cards}}", itinerary_cards)
+        body = body.replace("{{now_module}}", now_module)
         body = re.sub(r"\{\{pins:(\w+)\}\}", lambda m: json.dumps(pins_for(pins, m.group(1)), ensure_ascii=False).replace("</", "<\\/"), body)
         body = body.replace("{{upcoming_list}}", render_upcoming(occ, 10, "jump"))
         body = body.replace("{{events_json}}", upcoming_json.replace("</", "<\\/"))
@@ -393,7 +539,13 @@ def build():
             "og_image": meta.get("og_image", "downtown"),
             "og_alt": html.escape(meta.get("og_alt", "Main Street in Lyons, Colorado, with the red sandstone hogback behind"), quote=True),
             "head_extra": meta.get("head_extra", ""),
-            "jsonld": jsonld(meta),
+            "jsonld": jsonld(meta, {
+                "/": [x for x in [faq_ld(body)] if x],
+                "/events/": events_ld(occ),
+                "/explore/": [attractions_ld(places)],
+                "/outdoors/": [attractions_ld(places)],
+                "/itineraries/": trips_ld(itins),
+            }.get(meta["path"], [])),
             "body_class": meta.get("body_class", "l-page"),
             "nav": nav_html,
             "crumbs": crumbs(meta),
