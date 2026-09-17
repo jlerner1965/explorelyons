@@ -221,6 +221,16 @@ main:focus { outline: none; }
 .l-pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(14px, 2vw, 24px); align-items: start; }
 @media (max-width: 600px) { .l-pair { grid-template-columns: minmax(0, 1fr); } }
 
+/* ---- fact lists ----
+   Short scannable points that break a long passage without becoming a table.
+   The marker is a cut sandstone dash, not a bullet: no round shapes. */
+.l-facts { list-style: none; margin: 16px 0 0; padding: 0; max-width: 58ch; }
+.l-facts > li { position: relative; padding: 7px 0 7px 22px; font-size: .9375rem; line-height: 1.6; }
+.l-facts > li::before { content: ""; position: absolute; left: 0; top: 15px; width: 12px; height: 2px; background: var(--l-sandstone); }
+.l-facts > li strong { font-weight: 600; color: var(--l-redrock); }
+.l-bg-redrock .l-facts > li strong, .l-bg-river .l-facts > li strong, .l-bg-green .l-facts > li strong { color: var(--l-gold-lt); }
+.l-bg-redrock .l-facts > li::before, .l-bg-river .l-facts > li::before, .l-bg-green .l-facts > li::before { background: var(--l-gold); }
+
 /* ---- definition rows ---- */
 .l-dl { margin: 22px 0 0; }
 .l-dl > div { display: grid; grid-template-columns: minmax(110px, .44fr) minmax(0, 1fr); gap: 16px; padding: 12px 0; border-top: 1px solid var(--l-rule); }

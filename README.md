@@ -17,8 +17,9 @@ The design system is Lyons' own, "red rock and river" (see the top of
   head), a thin teal *river line* at the two big page transitions, a hogback
   silhouette in the hero, and photographs cut like flagstone with a chamfer on
   two corners. No rounded corners anywhere.
-- **Photography**: 31 Creative Commons and public-domain photographs of Lyons,
-  each credited on `/privacy/#photos`.
+- **Photography**: 32 Creative Commons and public-domain photographs of Lyons,
+  each credited on `/privacy/#photos`. Photographs are of places, not people: a
+  picture with identifiable residents or visitors in it does not go on the site.
 
 ## Pages
 
@@ -61,8 +62,9 @@ JSON meta block, then its body. Photographs are placed with
   periodically so the calendar horizon rolls forward.
 - **The month module**: `src/data/now.json` has one entry per month; the build writes the current month and the browser re-picks by its own date.
 - **An itinerary**: add an object to `src/data/itineraries.json` (steps, tips, months); it renders on `/itineraries/` and as a card.
-- **A photo**: drop a JPEG into a folder and run `node tools/images.mjs <folder>`
-  (needs `npm i sharp`), then credit it on `/privacy/#photos`.
+- **A photo**: drop a JPEG into `photos-new/` named for the slug it should get,
+  run `node tools/images.mjs photos-new` (needs `npm i sharp`), then add a credit
+  row on `/privacy/#photos`. Check the frame for identifiable people first.
 
 ### Live data and the map
 
@@ -94,6 +96,7 @@ Any other static host works: point it at `public/` after running `build.py`.
 
 ## Credits
 
-Photographs are from Wikimedia Commons under CC BY-SA 3.0 and public domain;
-each is credited on the privacy page. Fonts are Instrument Serif and Instrument
-Sans (SIL OFL), self-hosted.
+Photographs come from Wikimedia Commons and Flickr under Creative Commons
+licences (BY, BY-SA, BY-NC) and the public domain; each is credited, with its
+licence and a link to the original, on `/privacy/#photos`. Fonts are Fraunces
+and Bricolage Grotesque (SIL OFL), self-hosted.

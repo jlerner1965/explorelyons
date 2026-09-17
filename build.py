@@ -85,6 +85,16 @@ def photo_dims(name):
     return PHOTO_DIMS[name]
 
 
+def og_file(name):
+    """The share image for a page: the widest copy of that photo that exists.
+
+    Not every photograph reaches 1400px, so the width cannot be hard-coded in
+    the layout without breaking link previews for the ones that stop at 1000.
+    """
+    maxw, _ = photo_dims(name)
+    return f"{name}-{maxw}.jpg"
+
+
 def picture(attrs):
     name = attrs["name"]
     alt = attrs.get("alt", "")
@@ -536,7 +546,7 @@ def build():
             "title": html.escape(meta["title"], quote=True),
             "description": html.escape(meta["description"], quote=True),
             "path": meta["path"],
-            "og_image": meta.get("og_image", "downtown"),
+            "og_image": og_file(meta.get("og_image", "downtown")),
             "og_alt": html.escape(meta.get("og_alt", "Main Street in Lyons, Colorado, with the red sandstone hogback behind"), quote=True),
             "head_extra": meta.get("head_extra", ""),
             "jsonld": jsonld(meta, {
