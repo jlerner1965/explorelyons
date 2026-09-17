@@ -1,0 +1,92 @@
+<!--meta
+{
+  "title": "Lyons, Colorado Restaurants, Breweries, Shops & Lodging | ExploreLyons.com",
+  "description": "A verified directory of Lyons, Colorado businesses: restaurants, Oskar Blues and MainStage, Spirit Hound, coffee, galleries, gift shops, outdoor gear, tiny-home and lodge stays, and the museum and library, each with a link and the date it was checked.",
+  "path": "/eat-shop/",
+  "nav": "eat-shop",
+  "crumb": "Eat & Shop",
+  "og_image": "downtown",
+  "head_extra": "<script src=\"/assets/js/directory.js\" defer></script>"
+}
+-->
+<section class="l-bg-white" aria-labelledby="title-h">
+<div class="l-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(38px,5vw,72px)">
+<div class="l-g2-wide" style="align-items:end">
+<div>
+<div class="l-label">Eat &amp; shop locally</div>
+<h1 class="l-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,2rem + 2.2vw,4.5rem);line-height:.96;max-width:12ch;color:var(--l-evergreen)">Lyons Restaurants, Shops &amp; Places to Stay</h1>
+<p class="l-lead" style="margin:clamp(20px,2.5vw,32px) 0 0;max-width:46ch">Kitchens, taprooms, coffee, galleries, gear and beds, nearly all of them on six blocks of Main Street and almost all locally owned.</p>
+<nav aria-label="Popular directory categories" style="display:grid;gap:0;margin-top:22px;max-width:420px">
+<a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=restaurants-bars"><span><span>Restaurants &amp; bars</span></span><span aria-hidden="true">&#8594;</span></a>
+<a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=breweries-distilleries"><span><span>Breweries, distilleries &amp; taprooms</span></span><span aria-hidden="true">&#8594;</span></a>
+<a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=shops-gifts"><span><span>Shops &amp; gifts</span></span><span aria-hidden="true">&#8594;</span></a>
+<a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=stay-the-night"><span><span>Stay the night</span></span><span aria-hidden="true">&#8594;</span></a>
+</nav>
+</div>
+<figure class="l-photo-natural" style="margin:0">
+{{pic name="downtown" alt="Parked cars along Main Street in Lyons with the stone drug-store building and the hogback behind" sizes="(max-width: 900px) calc(100vw - 48px), 55vw" style="object-position:center 45%"}}
+<figcaption class="l-cap">Main Street, the 400 block</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<section class="l-bg-white" aria-labelledby="dir-h" style="padding-bottom:clamp(36px,5vw,72px)">
+<div class="l-wrap">
+<div class="l-rail l-rail--red"></div>
+<div class="l-dir" style="margin-top:clamp(20px,2.5vw,36px)">
+<div>
+<form data-dir-filters action="/eat-shop/" method="get" role="search" aria-label="Search and filter the directory">
+<label class="l-label l-label--quiet" for="dir-q" style="display:block">Search</label>
+<input class="l-field" id="dir-q" name="q" type="search" placeholder="Name, street or keyword" autocomplete="off">
+<fieldset class="l-cats" style="margin-top:20px">
+<legend class="l-label l-label--quiet">Filter by category</legend>
+{{dir_chips}}
+</fieldset>
+</form>
+<div class="l-dir-select">
+<label class="l-label l-label--quiet" for="dir-cat" style="display:block">Category</label>
+<select id="dir-cat" data-dir-select>{{dir_options}}</select>
+</div>
+<p class="l-small" style="margin:24px 0 0;max-width:40ch">The Town's own visitor directory and the Chamber's member list carry more names; this list keeps only what has been checked.</p>
+<a class="l-link" href="https://www.lyonscolorado.com/755/Discover" rel="noopener" style="display:inline-block;margin-top:12px">Visit Lyons directory, Town of Lyons <span aria-hidden="true">&#8599;</span></a>
+</div>
+<div>
+<div class="l-shead l-shead-row">
+<h2 class="l-h2" id="dir-h" style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--l-evergreen)">Local businesses</h2>
+<span aria-live="polite" aria-atomic="true" class="l-label l-label--quiet" data-dir-count>{{dir_count}} listings</span>
+</div>
+<div data-dir-active hidden style="display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;margin-top:12px">
+<span class="l-small" style="color:var(--l-ink)">Showing <strong data-dir-active-label style="font-weight:600"></strong></span>
+<button type="button" class="l-dir-clear" data-dir-clear>Clear filters</button>
+</div>
+<p class="l-small" style="margin:14px 0 0;max-width:74ch">Grouped by category; open a group to see its listings, or search across all of them. Each row is checked against the business&#8217;s own site or the Town&#8217;s Visit Lyons directory and shows the date it was checked. Hours change with the season; the linked site is the authority.</p>
+<details style="margin-top:14px">
+<summary class="l-small" style="cursor:pointer;color:var(--l-sky-ink)">How this directory is compiled</summary>
+<p class="l-small" style="margin:10px 0 0;max-width:70ch">A curated list, not a census. A business goes in when its name, address and hours can be read on its own site or on the Town of Lyons visitor pages, and it carries the date that was done. Phone numbers appear only where the business publishes one. Nothing here is paid for, and no listing is ranked above another; groups are alphabetical. Send additions and corrections through <a href="/contact/">the contact page</a> with a link to the source.</p>
+</details>
+<div style="margin-top:20px">
+{{dir_groups}}
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="l-bg-paper l-pad-sm" aria-labelledby="add-h" style="border-top:1px solid var(--l-rule)">
+<div class="l-wrap">
+<div class="l-g2-wide" style="align-items:start">
+<div>
+<div class="l-label">Business owners</div>
+<h2 class="l-h2" id="add-h" style="margin-top:12px;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:18ch;color:var(--l-evergreen)">Missing, moved or changed hours?</h2>
+</div>
+<div>
+<p class="l-body" style="margin:0;max-width:60ch">Send the correction with a link to your own page and it goes in with the date it was verified. Listings are free and stay free.</p>
+<div class="l-btns" style="margin-top:20px">
+<a class="l-btn" href="/contact/">Submit a listing</a>
+<a class="l-btn l-btn--ghost" href="https://www.lyons-chamber.com/" rel="noopener">Lyons Chamber of Commerce <span aria-hidden="true">&#8599;</span></a>
+</div>
+</div>
+</div>
+</div>
+</section>

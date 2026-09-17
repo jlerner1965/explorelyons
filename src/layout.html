@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<link rel="canonical" href="https://explorelyons.com{{path}}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ExploreLyons.com">
+<meta property="og:title" content="{{title}}">
+<meta property="og:description" content="{{description}}">
+<meta property="og:url" content="https://explorelyons.com{{path}}">
+<meta property="og:image" content="https://explorelyons.com/assets/photos/{{og_image}}-1400.jpg">
+<meta property="og:image:alt" content="{{og_alt}}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#173F3A">
+<link rel="preload" href="/assets/fonts/instrument-serif-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrument-sans-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/css/guide.css">
+<script src="/assets/js/guide.js" defer></script>
+{{head_extra}}
+<script type="application/ld+json">{{jsonld}}</script>
+</head>
+<body>
+<div class="{{body_class}}">
+<a class="l-skip" href="#main">Skip to main content</a>
+<header class="l-head"><noscript><style>@media (max-width:1180px){.l-burger{display:none}.l-nav{display:flex;position:static;padding:0 0 12px;border-bottom:0}}</style></noscript>
+<div class="l-wrap l-head-in">
+<a class="l-mark" href="/"><span class="l-word">LYONS</span><small>Independent community guide</small></a>
+<button class="l-burger" type="button" aria-expanded="false" aria-controls="l-menu" aria-label="Open menu"><span></span><span></span><span></span></button>
+<nav class="l-nav" id="l-menu" aria-label="Primary">
+{{nav}}
+</nav>
+</div>
+</header>
+{{crumbs}}
+<main id="main" tabindex="-1">
+{{body}}
+</main>
+<footer class="l-foot">
+<div class="l-wrap" style="padding-top:clamp(40px,5vw,76px);padding-bottom:clamp(28px,3.5vw,48px)">
+<div class="l-foot-cols">
+<div class="l-foot-col">
+<div class="l-foot-mark">LYONS</div>
+<div class="l-rail l-rail--light" style="max-width:220px"></div>
+<div class="l-small" style="margin-top:6px;color:var(--l-sage-lt)">Independent community guide<br>explorelyons.com</div>
+</div>
+<div class="l-foot-col">
+<h2>Visit</h2>
+<a href="/explore/">Explore</a>
+<a href="/eat-shop/">Eat &amp; Shop</a>
+<a href="/events/">Events</a>
+<a href="/plan-a-visit/">Plan a Visit</a>
+</div>
+<div class="l-foot-col">
+<h2>Community</h2>
+<a href="/community/">Community groups</a>
+<a href="/community/#resources">Resident resources</a>
+<a href="/our-story/">Our Story</a>
+<a href="/contact/">Send a listing or correction</a>
+</div>
+<div class="l-foot-col">
+<h2>Civic</h2>
+<a href="/civic/">Civic information</a>
+<a href="/civic/#board">Board of Trustees</a>
+<a href="https://www.lyonscolorado.com/" rel="noopener">Town of Lyons <span aria-hidden="true">&#8599;</span></a>
+<a href="https://bouldercounty.gov/" rel="noopener">Boulder County <span aria-hidden="true">&#8599;</span></a>
+</div>
+</div>
+<p class="l-disclaim" style="margin:clamp(28px,3.5vw,48px) 0 0;padding-top:18px;border-top:1px solid rgba(158,173,152,.3)">ExploreLyons.com is an independent community guide to Lyons, Colorado. It is not the Town of Lyons, Boulder County, the Lyons Chamber of Commerce or any other official body; the official sources are linked from every page that relies on them.</p>
+<div class="l-foot-meta" style="margin-top:20px">
+<span>Reviewed {{reviewed}}</span>
+<a href="/privacy/#photos" style="font-size:inherit;letter-spacing:inherit">Photo credits</a>
+<a href="/privacy/" style="font-size:inherit;letter-spacing:inherit">Privacy</a>
+</div>
+</div>
+</footer>
+</div>
+</body>
+</html>

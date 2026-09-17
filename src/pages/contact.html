@@ -1,0 +1,92 @@
+<!--meta
+{
+  "title": "Send a Listing, Event or Correction | ExploreLyons.com",
+  "description": "Business owners, event organizers and residents keep ExploreLyons.com accurate. Send a new listing, an event, or a correction with a link to its source.",
+  "path": "/contact/",
+  "nav": "contact",
+  "crumb": "Contact",
+  "og_image": "downtown"
+}
+-->
+<section class="l-bg-white" aria-labelledby="title-h">
+<div class="l-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(20px,2.5vw,36px)">
+<div class="l-g2-wide" style="align-items:end">
+<div>
+<div class="l-label">Contribute</div>
+<h1 class="l-display" id="title-h" style="margin-top:14px;font-size:clamp(1.875rem,1.4rem + 1.9vw,2.875rem);line-height:1.05;max-width:24ch;color:var(--l-evergreen)">Send a listing, an event or a correction</h1>
+</div>
+<p class="l-lead" style="margin:0;max-width:50ch">Business owners, event organizers and residents keep this guide accurate. Send yours with a link to its source and it goes in with the date it was verified.</p>
+</div>
+</div>
+</section>
+
+<section class="l-bg-green l-pad" id="contact" aria-labelledby="contact-h">
+<div class="l-wrap">
+<div class="l-g2">
+<div>
+<h2 class="l-label" id="contact-h" style="margin:0">The form</h2>
+<form data-contact-form data-endpoint="" method="post" action="mailto:editor@explorelyons.com" style="display:grid;gap:18px;max-width:560px;margin-top:20px">
+<div class="l-sr" aria-hidden="true">
+<label for="v-company">Leave this field empty</label>
+<input id="v-company" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
+</div>
+<input type="hidden" name="_subject" value="ExploreLyons.com submission">
+<div>
+<label class="l-label" for="v-kind" style="color:var(--l-gold-lt)">What is this?</label>
+<select class="l-field" id="v-kind" name="kind">
+<option>New business listing</option>
+<option data-requires-source>Business correction</option>
+<option data-requires-source>Event submission</option>
+<option data-requires-source>Event correction</option>
+<option data-requires-source>Community organization correction</option>
+<option data-requires-source>Resident resource correction</option>
+<option data-requires-source>Accessibility correction</option>
+<option>Public art inventory</option>
+<option data-requires-source>General factual correction</option>
+<option>Image rights concern</option>
+<option>Something else</option>
+</select>
+</div>
+<div>
+<label class="l-label" for="v-name" style="color:var(--l-gold-lt)">Name of the business, event or page</label>
+<input class="l-field" id="v-name" name="subject" type="text" required placeholder="e.g. Explore &#8212; trails">
+</div>
+<div>
+<label class="l-label" for="v-page" style="color:var(--l-gold-lt)">Page this is about <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+<input class="l-field" id="v-page" name="page" type="text" autocomplete="off" placeholder="e.g. /eat-shop/ or /events/">
+</div>
+<div>
+<label class="l-label" for="v-detail" style="color:var(--l-gold-lt)">Details</label>
+<textarea class="l-field" id="v-detail" name="detail" rows="5" required></textarea>
+</div>
+<div>
+<label class="l-label" for="v-src" style="color:var(--l-gold-lt)">Link to your own page or the source <span data-source-note style="text-transform:none;letter-spacing:0">(optional)</span></label>
+<input class="l-field" id="v-src" name="source" type="url" inputmode="url" autocomplete="url" placeholder="https://">
+</div>
+<div>
+<label class="l-label" for="v-email" style="color:var(--l-gold-lt)">Your email</label>
+<input class="l-field" id="v-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Used only to reply about this submission">
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
+<button class="l-btn" type="submit" style="cursor:pointer;font-family:inherit">Send submission</button>
+</div>
+<p class="l-small" style="margin:0;max-width:54ch;color:var(--l-sage-lt)">By sending this you agree that the editor may check it against its source and publish what it supports, with the date it was verified. Sending it does not guarantee publication, and nothing is published without review. Your email is optional and is used only to reply about this submission. <a href="/privacy/">How submissions are handled</a>.</p>
+</form>
+<template data-form-success><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--l-gold-lt);max-width:54ch;color:var(--l-white)">Thank you &#8212; your submission has been sent. It will be checked against its source before anything is published.</p></template>
+<template data-form-unavailable><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--l-gold-lt);max-width:54ch;color:var(--l-white)">This form is not connected to a mail service yet, so nothing was sent. Write to <a href="mailto:editor@explorelyons.com" style="color:var(--l-gold-lt)">editor@explorelyons.com</a> instead. For anything official, the <a href="/community/#resources">responsible body</a> is the reliable contact.</p></template>
+</div>
+<div>
+<div class="l-label">What goes in</div>
+<h2 class="l-h2" style="margin-top:12px;max-width:16ch">Verified, credited, dated.</h2>
+<p class="l-body" style="margin:16px 0 0;max-width:54ch">A listing needs a name, an address and a page of its own where hours can be read. An event needs a date on the organizer's page. A correction needs the source that shows the current fact. Each goes in with the date it was checked.</p>
+<dl class="l-dl">
+<div><dt>Businesses</dt><dd>Free, and never ranked. Any Lyons business with a public address and its own page.</dd></div>
+<div><dt>Events</dt><dd>Public events in or about Lyons, once the organizer has published the date.</dd></div>
+<div><dt>Public art</dt><dd>Works go in with a verified title, artist and location, and the artist's credit.</dd></div>
+<div><dt>Photographs</dt><dd>The photographs on this site are credited on the <a href="/privacy/#photos">photo credits</a> list. Photographers who would like their work of Lyons used here, with credit, are welcome to write.</dd></div>
+<div><dt>Not here</dt><dd>Anything official: permits, utilities, complaints, records requests. Those go to <a href="/community/#resources">the body responsible</a>.</dd></div>
+</dl>
+</div>
+</div>
+</div>
+</section>
