@@ -1,0 +1,122 @@
+{
+  "note": "Each itinerary is a sequence of real places from the directory and the outdoors page, with the times a visitor can actually keep. Steps link to the page that carries the verified details. 'season' is prose; 'months' is used for the home page to surface the itineraries that fit the current month.",
+  "itineraries": [
+    {
+      "slug": "a-day-in-lyons",
+      "title": "A day in Lyons",
+      "kicker": "The first visit",
+      "blurb": "Coffee on High Street, the stone blocks, the river to the whitewater park, a short trail, and a beer where the craft-can movement started. One parking spot, all day.",
+      "photo": "downtown",
+      "alt": "Main Street in Lyons looking west toward the red sandstone hogback",
+      "best_for": "First-timers, a Boulder day trip, anyone with six hours and one car",
+      "season": "April to October is easiest; the museum and the river are summer things, the walk and the trail work all year",
+      "months": [4, 5, 6, 7, 8, 9, 10],
+      "getting_around": "Park once on Main Street or at 4th and Broadway. Everything but the trailhead is on foot; Hall Ranch is a five-minute drive.",
+      "steps": [
+        { "when": "9:00", "title": "Coffee at Moxie Mercantile", "detail": "High Street, a block north of Main: coffee and pastries from the Louisville bakery. Sit outside if it is warm; the stone buildings are best in morning light.", "href": "/eat-shop/?q=moxie" },
+        { "when": "9:45", "title": "Walk the stone blocks", "detail": "Six blocks of Main Street between the junctions, then High Street. Fifteen of the sandstone buildings are on the National Register; the walking-tour leaflet is at the visitor center in Sandstone Park. In summer, the Redstone Museum on High Street is open and free.", "href": "/explore/#mainstreet" },
+        { "when": "11:00", "title": "The river path to the whitewater park", "detail": "From Sandstone Park past the Depot along the North St. Vrain to LaVern M. Johnson Park, without crossing the highway. Check the level before you go: tubes above 40 cfs, feet in the water at any level.", "href": "/outdoors/#river" },
+        { "when": "12:30", "title": "Lunch on Main", "detail": "Smokin Dave's for barbecue, Mojo for tacos on the weekend, or a St. Vrain Market sandwich taken back to the park. Indian Bites if you want a plate to share.", "href": "/eat-shop/?category=restaurants-bars" },
+        { "when": "2:00", "title": "A short trail at Hall Ranch", "detail": "Drive one mile west on Colorado 7. The Antelope trail (1 mile) gives the view without the climb; the first mile of Bitterbrush gives the red rock. No dogs. Bring water and go before the afternoon clouds build.", "href": "/outdoors/#trails" },
+        { "when": "4:30", "title": "A beer at Oskar Blues", "detail": "Back on Main Street: the original brewery, open since 1997. On a Sunday the serenade starts at five with no cover; on a Tuesday the bluegrass pick.", "href": "/events/" },
+        { "when": "6:30", "title": "Dinner, then the drive home", "detail": "Marigold for the town's dinner-out (book ahead, Wednesday to Sunday), La Mariposa for Mexican on the east end, or Lyons Locale for a glass of wine and a board. Twenty minutes to Boulder, an hour to Denver.", "href": "/eat-shop/?category=restaurants-bars" }
+      ],
+      "tips": [
+        "Summer Saturdays: the Hall Ranch lot is full by nine; do the trail first and the town after.",
+        "Festival weekends in late July and mid-August change everything; see the festival itinerary instead."
+      ]
+    },
+    {
+      "slug": "half-a-day-with-kids",
+      "title": "Half a day with kids",
+      "kicker": "Water, rocks, soft-serve, pinball",
+      "blurb": "The splash pad and the whitewater rocks, a float if the level is right, ice cream at the walk-up window, and pinball for the last hour. Under four hours, under a mile of walking.",
+      "photo": "apple-valley-bridge",
+      "alt": "The wooden arch of the Apple Valley Road bridge over the North St. Vrain",
+      "best_for": "Families with children from toddlers to about twelve",
+      "season": "June to September for the water; the park, the pinball and the ice cream work from spring to fall",
+      "months": [5, 6, 7, 8, 9],
+      "getting_around": "Park at LaVern M. Johnson Park (Town parking pass on busy days) or free on Main Street and walk the river path in.",
+      "steps": [
+        { "when": "10:00", "title": "LaVern M. Johnson Park", "detail": "Under the cliffs off Broadway: the splash pad, two playgrounds, the lawn, and the sandstone slabs along the whitewater park where children spend an hour throwing rocks. Restrooms and shade.", "href": "/outdoors/#river" },
+        { "when": "11:00", "title": "Float, if the river says so", "detail": "Between about 40 and 300 cfs the run through the park is a family float; life jackets are required for children twelve and under and rent in town. Below 40, wade; above 300, watch the kayakers instead.", "href": "/outdoors/#river" },
+        { "when": "12:30", "title": "Lyons Dairy Bar", "detail": "The walk-up window at the east end of Main: burgers, sandwiches and soft-serve, eaten at the tables outside.", "href": "/eat-shop/?q=dairy" },
+        { "when": "1:15", "title": "Pinball, or the library", "detail": "Lyons Classic Pinball on Main has dozens of machines and a change machine; the Lyons Regional Library on 4th Avenue has a children's room and afternoon programs most days, and is the rainy-day answer.", "href": "/eat-shop/?q=pinball" },
+        { "when": "2:00", "title": "Bohn Park", "detail": "Across the river on 2nd Avenue: the dirt-jump bike park for older kids with bikes, the fishing platform, the fields, and the dog park if the dog came too.", "href": "/outdoors/#trails" }
+      ],
+      "tips": [
+        "The Town's park lots need a parking pass on summer weekends; Main Street is free and the walk in is flat.",
+        "In winter, swap the water for the ice rink at LaVern M. Johnson Park when it is cold enough to freeze."
+      ]
+    },
+    {
+      "slug": "the-bike-weekend",
+      "title": "The bike weekend",
+      "kicker": "Two rides, one town",
+      "blurb": "Hall Ranch on Saturday, Picture Rock to Heil Valley Ranch on Sunday, both from a bed in town and both finishing at a taproom. The Front Range's best-known climb without driving to it.",
+      "photo": "hall-ranch-trail",
+      "alt": "A hiker on the red-dirt Bitterbrush trail at Hall Ranch",
+      "best_for": "Mountain bikers who can climb; intermediate and up",
+      "season": "May to October; Hall Ranch dries by May, and the Nelson Loop can close for prescribed burns from mid-January to mid-April",
+      "months": [5, 6, 7, 8, 9, 10],
+      "getting_around": "Both trailheads are rideable from Main Street: Hall Ranch is a mile up Colorado 7, Picture Rock about two miles south on US 36 to Red Gulch Road.",
+      "steps": [
+        { "when": "Friday", "title": "Check in on the river", "detail": "A-Lodge at the west end of Main is built for this, with the Rock Garden bar on the deck; WeeCasa next door if you want a tiny home. Dinner at MainStage: pizza, beer, and the Thursday pick if you came a day early.", "href": "/stay/" },
+        { "when": "Saturday 7:30", "title": "Hall Ranch: Bitterbrush to the Nelson Loop", "detail": "Be in the lot before eight on a summer weekend. Bitterbrush climbs 3.7 miles of rock and ponderosa to the Nelson Loop (2.2 miles) through the meadows and the Nelson house ruins, then back down the way you came: about twelve miles. No dogs, no e-bikes.", "href": "/outdoors/#trails" },
+        { "when": "Saturday 12:30", "title": "Lunch and the afternoon off", "detail": "Oskar Blues on Main, then the river: the whitewater park is the recovery pool. Dinner at Marigold if you booked, La Mariposa if you did not.", "href": "/eat-shop/" },
+        { "when": "Sunday 8:00", "title": "Picture Rock to Heil Valley Ranch", "detail": "From the Picture Rock trailhead on Red Gulch Road, 5.2 miles of moderate climb along the old quarry road to the ranch, then Wild Turkey and Wapiti for a loop and back the way you came: fifteen to twenty miles. Elk habitat, on-trail only, and again no dogs or e-bikes.", "href": "/outdoors/#trails" },
+        { "when": "Sunday 1:00", "title": "Refuel and roll home", "detail": "A St. Vrain Market sandwich, a last look at the level from the bridge, and the drive: Boulder in twenty minutes, Denver in an hour.", "href": "/eat-shop/?q=market" }
+      ],
+      "tips": [
+        "Road bike instead: Apple Valley Road makes a quiet loop north of town, and Colorado 7 up the South St. Vrain canyon is the climb with the view, with traffic.",
+        "Muddy trail? Turn around. Ruts last the season and the county closes trails that get them."
+      ]
+    },
+    {
+      "slug": "festival-weekend-without-a-car",
+      "title": "Festival weekend without a car",
+      "kicker": "RockyGrass and the Folks Festival",
+      "blurb": "Camp on the ranch or sleep on West Main, walk to the gate, float the river in the morning, and never look for parking. Late July and mid-August, and the plan starts the winter before.",
+      "photo": "planet-bluegrass-river",
+      "alt": "A red sandstone cliff rising straight out of the St. Vrain at the Planet Bluegrass ranch",
+      "best_for": "Festivarians, and anyone in town on the two biggest weekends of the year",
+      "season": "RockyGrass, the last full weekend of July; the Rocky Mountain Folks Festival, mid-August",
+      "months": [7, 8],
+      "getting_around": "On foot. The festival ranch, WeeCasa and A-Lodge sit together at the west end of Main; the shuttles run from Bohn Park and from Longmont for everyone else.",
+      "steps": [
+        { "when": "Months ahead", "title": "Tickets, then the bed", "detail": "On-site camping sells with the festival tickets and goes first. The tiny homes at WeeCasa and A-Lodge next door are the walk-to-the-gate beds and book out the week the dates post; the Town campground follows; Longmont hotels are the fallback.", "href": "/stay/#festivals" },
+        { "when": "Friday morning", "title": "Arrive and float", "detail": "Get in before the afternoon. The river in late July is usually prime tubing water: from the Apple Valley bridge down to LaVern M. Johnson Park, or the short run through the park, before the gates open.", "href": "/outdoors/#river" },
+        { "when": "Afternoon and night", "title": "The ranch", "detail": "Music on the river stage under the cliff until late; the town's kitchens are a ten-minute walk east for dinner between sets. Oskar Blues runs the late pick after the main stage closes.", "href": "/events/" },
+        { "when": "Saturday", "title": "Repeat, with a swim", "detail": "The river runs along the festival ground; the crowd is in it by two. Sunscreen, a hat, water, and a life jacket for anyone under twelve.", "href": "/outdoors/#river" },
+        { "when": "Sunday", "title": "Breakfast, gospel set, home", "detail": "Moxie Mercantile on High Street opens at seven. The Sunday sets end early enough for the drive down the canyon in daylight.", "href": "/eat-shop/?q=moxie" }
+      ],
+      "tips": [
+        "Everything in town is busier: book dinner, expect a wait at the taprooms, and give the shuttle lot time.",
+        "Afternoon thunderstorms come off the mountains most July days; the stage waits them out, so bring a layer."
+      ]
+    },
+    {
+      "slug": "a-rainy-afternoon-or-a-winter-day",
+      "title": "A rainy afternoon, or a winter day",
+      "kicker": "Indoors, or dry and sunny",
+      "blurb": "The museum and the galleries, the gift shops on the 400 block, a whisky tasting up the highway, pinball, trivia. And in winter the ice rink, the dry trail at Rabbit Mountain and the Parade of Lights.",
+      "photo": "redstone-museum",
+      "alt": "The rusticated red sandstone 1881 schoolhouse that houses the Lyons Redstone Museum",
+      "best_for": "Wet days, cold days, and anyone who came for the town rather than the trail",
+      "season": "All year; the museum is a summer season, the ice rink a cold-snap thing",
+      "months": [11, 12, 1, 2, 3],
+      "getting_around": "Main Street on foot; Spirit Hound is a five-minute drive east on Colorado 66.",
+      "steps": [
+        { "when": "1:00", "title": "Lunch at Indian Bites or Julie's", "detail": "Curries on the 400 block, or Thai at the east end from four-thirty. On a cold day, Smokin Dave's brisket.", "href": "/eat-shop/?category=restaurants-bars" },
+        { "when": "2:00", "title": "The Redstone Museum, or the galleries", "detail": "In season, the 1881 schoolhouse on High Street: the quarries, the railroad, the floods, free. Otherwise Western Stars Gallery at the east end of Main, open Friday to Sunday, for local art and antiques.", "href": "/explore/#art" },
+        { "when": "3:00", "title": "The 400 block", "detail": "Uniquely Lyons for the town's own merchandise, Solace for chocolate and gifts, Gatherings of a Lifetime for antiques on a weekend, Honorable Harvest for tea to take home.", "href": "/eat-shop/?category=shops-gifts" },
+        { "when": "4:00", "title": "Spirit Hound, or pinball", "detail": "Drive five minutes east to the distillery on Colorado 66 for a tasting of the Colorado straight malt; or stay on Main and put an hour into Lyons Classic Pinball.", "href": "/eat-shop/?category=breweries-distilleries" },
+        { "when": "6:30", "title": "Trivia, a pick, or the rink", "detail": "Tuesday is trivia at MainStage and the pick at Oskar Blues; Thursday the pick'n at MainStage. In a cold January the ice rink at LaVern M. Johnson Park is open in the evening.", "href": "/events/" }
+      ],
+      "tips": [
+        "Winter trails: Rabbit Mountain dries first after snow and takes leashed dogs; Hall Ranch's lower Bitterbrush is often clear between storms.",
+        "Early December: the Parade of Lights down Main Street, then the tree lighting."
+      ]
+    }
+  ]
+}

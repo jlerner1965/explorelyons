@@ -142,7 +142,31 @@
     });
   }
 
-  function init() { nav(); weekend(); upcoming(); gauge(); contact(); }
+  // "Right now": the build writes the current month; a visitor a month later
+  // gets their own month from the inline data. Itinerary cards get a
+  // "Good now" tag when their months include this one.
+  function now() {
+    var month = new Date().getMonth() + 1;
+    document.querySelectorAll('[data-now]').forEach(function (el) {
+      if (parseInt(el.getAttribute('data-now-month'), 10) === month) return;
+      var dataEl = el.querySelector('script[data-now-data]');
+      if (!dataEl) return;
+      var months; try { months = JSON.parse(dataEl.textContent); } catch (e) { return; }
+      var m = months[String(month)]; if (!m) return;
+      var h = el.querySelector('[data-now-headline]'); if (h) h.textContent = m.headline;
+      var b = el.querySelector('[data-now-body]'); if (b) b.textContent = m.body;
+      var l = el.querySelector('[data-now-links]');
+      if (l) l.innerHTML = m.links.map(function (x) { var ext = /^https?:/.test(x[1]); return '<a class="l-link" href="' + x[1].replace(/"/g, '&quot;') + '"' + (ext ? ' rel="noopener"' : '') + '>' + x[0].replace(/</g, '&lt;') + ' <span aria-hidden="true">' + (ext ? '\u2197' : '\u2192') + '</span></a>'; }).join(' ');
+      el.setAttribute('data-now-month', String(month));
+    });
+    document.querySelectorAll('.l-itin-card[data-months]').forEach(function (card) {
+      var ok = card.getAttribute('data-months').split(' ').indexOf(String(month)) !== -1;
+      var tag = card.querySelector('[data-good-now]');
+      if (tag) tag.hidden = !ok;
+    });
+  }
+
+  function init() { nav(); weekend(); upcoming(); gauge(); now(); contact(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
