@@ -1,12 +1,12 @@
 <!--meta
 {
-  "title": "Lyons, Colorado Events Calendar | ExploreLyons.com",
-  "description": "Upcoming events in Lyons, Colorado: concerts and weekly picks, Town meetings, library programs, artisan markets, RockyGrass and the Folks Festival, with every date checked against the organizer's own page.",
+  "title": "Lyons, Colorado Events Calendar",
+  "description": "What is on in Lyons, Colorado: concerts, weekly picks, Town meetings, markets, RockyGrass and the Folks Festival, each date checked against the organizer.",
   "path": "/events/",
   "nav": "events",
   "crumb": "Events",
   "og_image": "outlaw-saloon",
-  "head_extra": "<script src=\"/assets/js/events.js\" defer></script>"
+  "head_extra": "<script src=\"/assets/js/events.js\" defer></script>\n<link rel=\"alternate\" type=\"text/calendar\" href=\"/events.ics\" title=\"Lyons, Colorado events\">"
 }
 -->
 <section class="l-bg-white" aria-labelledby="title-h">
@@ -38,6 +38,16 @@
 <a class="l-btn l-btn--ghost" href="https://lyonsrecorder.org/events/" rel="noopener">Lyons Recorder events <span aria-hidden="true">&#8599;</span></a>
 </div>
 <a class="l-link" href="/contact/" style="display:inline-block;margin-top:18px">Submit an event <span aria-hidden="true">&#8594;</span></a>
+<div class="l-callout l-callout--paper" style="margin-top:22px" id="subscribe">
+<div class="l-label" style="color:var(--l-sandstone-ink)">Put it in your own calendar</div>
+<p class="l-small" style="margin:10px 0 0;max-width:46ch">One feed with everything below, including the weekly picks and the Town meetings as repeating entries. It refreshes on its own, so a new date shows up without doing anything.</p>
+<div class="l-btns" style="margin-top:14px">
+<a class="l-btn" href="webcal://explorelyons.com/events.ics">Subscribe <span aria-hidden="true">&#8594;</span></a>
+<a class="l-btn l-btn--ghost" href="https://calendar.google.com/calendar/render?cid=webcal%3A%2F%2Fexplorelyons.com%2Fevents.ics" rel="noopener">Add to Google Calendar <span aria-hidden="true">&#8599;</span></a>
+</div>
+<p class="l-small" style="margin:14px 0 0">Apple Calendar and Outlook take the Subscribe link. Anything else wants the address: <a class="l-link" href="/events.ics">https://explorelyons.com/events.ics</a></p>
+<p class="l-small" style="margin:10px 0 0;color:var(--l-muted)">Times come from the organizer. Where one publishes a start but no finish, the entry is an hour long and says so.</p>
+</div>
 </div>
 <div>
 <div class="l-shead l-shead-row">
@@ -66,7 +76,7 @@
 <span class="l-h3" data-cal-label aria-live="polite" style="color:var(--l-evergreen)">Calendar</span>
 <button type="button" class="l-cal-btn" data-cal-nav="1" aria-label="Next month">Next &#8594;</button>
 </div>
-<div class="l-cal-grid" data-cal-grid role="grid" aria-label="Month calendar"></div>
+<div class="l-cal-grid" data-cal-grid role="group" aria-label="Month calendar"></div>
 <div class="l-cal-list" data-cal-list aria-live="polite"></div>
 </div>
 </div>

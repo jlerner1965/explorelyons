@@ -39,13 +39,27 @@
     if (active) active.hidden = !filtering;
     if (activeLabel) activeLabel.textContent = (cat !== 'all' ? labels[cat] : 'all categories') + (term ? ' matching “' + q.value.trim() + '”' : '');
     if (select && select.value !== cat) select.value = cat;
-    if (push && history.replaceState) {
+    if (push) syncUrl();
+  }
+
+  // The address bar catches up once typing pauses, not on every keystroke:
+  // Safari throws a SecurityError after about a hundred replaceState calls in
+  // thirty seconds, which is a sentence of typing, and the throw would take
+  // the filter down with it. The list itself still filters as you type.
+  var urlTimer = null;
+  function syncUrl() {
+    if (!history.replaceState) return;
+    if (urlTimer) clearTimeout(urlTimer);
+    urlTimer = setTimeout(function () {
+      urlTimer = null;
       var p = new URLSearchParams();
-      if (cat !== 'all') p.set('category', cat);
-      if (term) p.set('q', q.value.trim());
+      if (category() !== 'all') p.set('category', category());
+      if (q.value.trim()) p.set('q', q.value.trim());
       var s = p.toString();
-      history.replaceState(null, '', location.pathname + (s ? '?' + s : '') + location.hash);
-    }
+      try {
+        history.replaceState(null, '', location.pathname + (s ? '?' + s : '') + location.hash);
+      } catch (e) { /* a rate limit here must never break the filtering */ }
+    }, 250);
   }
 
   // Initial state from the URL, so category links elsewhere land filtered.

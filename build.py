@@ -14,6 +14,7 @@ expanded to a <picture> with jpeg and webp sources. Directory rows and event
 lists are rendered from src/data/*.json so every page works without script.
 """
 import datetime as dt
+import hashlib
 import html
 import json
 import os
@@ -27,6 +28,20 @@ OUT = os.path.join(ROOT, "public")
 SITE = "https://explorelyons.com"
 TODAY = dt.date.today()
 REVIEWED = TODAY.strftime("%B %Y")
+ICS_STAMP = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+# Where the contact form posts. api/contact.py is this site's own endpoint: it
+# validates the submission and hands it to Resend, and being same-origin it
+# needs nothing added to the Content-Security-Policy. An off-site form service
+# (Formspree, Basin, Formsubmit) works here just as well -- they all take a
+# plain POST of the fields -- but its origin has to be allowed in the policy,
+# and check_form_csp() below will not let the site build until it is.
+#
+# Either way both paths work: fetch() for visitors with scripting, and an
+# ordinary form POST landing on /thanks/ for those without. Left empty, the
+# form says plainly that nothing was sent and offers the editor's address
+# instead of pretending to deliver.
+FORM_ENDPOINT = "/api/contact"
 
 NAV = [
     ("explore", "/explore/", "Explore"),
@@ -85,6 +100,14 @@ def photo_dims(name):
     return PHOTO_DIMS[name]
 
 
+def og_image_url(name):
+    """Absolute URL of the largest rendered width of a photo. Not every photo
+    reaches 1400px, so the width is looked up rather than assumed: a card
+    pointing at a width that was never written is a broken share image."""
+    maxw, _ = photo_dims(name)
+    return f"{SITE}/assets/photos/{name}-{maxw}.jpg"
+
+
 def picture(attrs):
     name = attrs["name"]
     alt = attrs.get("alt", "")
@@ -94,14 +117,46 @@ def picture(attrs):
     maxw, (w, h) = photo_dims(name)
     widths = [x for x in PHOTO_WIDTHS if x <= maxw]
     jpg = ", ".join(f"/assets/photos/{name}-{x}.jpg {x}w" for x in widths)
-    webp = ", ".join(f"/assets/photos/{name}-{x}.webp {x}w" for x in widths)
+    # WebP only when there is one at every width. On a grainy photograph webp
+    # can come out larger than the jpeg, and tools/images.mjs drops the whole
+    # set when it does; offering a partial srcset here would quietly hand a
+    # wide screen a smaller image, which costs more than the bytes save.
+    photo_dir = os.path.join(SRC, "assets", "photos")
+    has_webp = all(os.path.exists(os.path.join(photo_dir, f"{name}-{x}.webp")) for x in widths)
+    source = ""
+    if has_webp:
+        webp = ", ".join(f"/assets/photos/{name}-{x}.webp {x}w" for x in widths)
+        source = f'<source type="image/webp" srcset="{webp}" sizes="{sizes}">'
     fetch = ' fetchpriority="high"' if loading == "eager" else ""
     return (
-        f'<picture><source type="image/webp" srcset="{webp}" sizes="{sizes}">'
+        f'<picture>{source}'
         f'<img src="/assets/photos/{name}-{widths[0]}.jpg" srcset="{jpg}" sizes="{sizes}" '
         f'alt="{html.escape(alt, quote=True)}" width="{w}" height="{h}" loading="{loading}" decoding="async"{fetch}'
         f'{" style=" + chr(34) + html.escape(style, quote=True) + chr(34) if style else ""}></picture>'
     )
+
+
+ASSET_RE = re.compile(r"/assets/(?:css|js)/[A-Za-z0-9._-]+\.(?:css|js)")
+ASSET_HASH = {}
+
+
+def version(url):
+    """`/assets/js/guide.js` -> `/assets/js/guide.js?v=1a2b3c4d`.
+
+    Everything under /assets is served with a one-year immutable
+    Cache-Control, which is right for the photographs and the fonts (their
+    names change when they do) but wrong for the stylesheet and the scripts,
+    which are edited in place. Stamping the content hash on the URL is what
+    makes the header honest: edit the file and returning visitors get the new
+    one, leave it alone and nobody refetches it."""
+    if url not in ASSET_HASH:
+        with open(os.path.join(SRC, url.lstrip("/")), "rb") as f:
+            ASSET_HASH[url] = hashlib.sha256(f.read()).hexdigest()[:8]
+    return f"{url}?v={ASSET_HASH[url]}"
+
+
+def version_assets(text):
+    return ASSET_RE.sub(lambda m: version(m.group(0)), text)
 
 
 PIC_RE = re.compile(r"\{\{pic\s+([^}]*)\}\}")
@@ -207,7 +262,7 @@ def render_directory(data):
             if l.get("url"):
                 host = re.sub(r"^https?://(www\.)?", "", l["url"]).rstrip("/")
                 site = f'<a class="l-link" href="{html.escape(l["url"])}" rel="noopener" style="white-space:nowrap;font-size:.875rem">{html.escape(host)} <span aria-hidden="true">&#8599;</span></a>'
-            phone = f' &#183; <a href="tel:{re.sub(r"[^0-9+]", "", l["phone"])}" style="color:inherit">{html.escape(l["phone"])}</a>' if l.get("phone") else ""
+            phone = f' &#183; <a href="tel:{re.sub(r"[^0-9+]", "", l["phone"])}" style="color:inherit;white-space:nowrap">{html.escape(l["phone"])}</a>' if l.get("phone") else ""
             pin = f'<a class="l-link" href="#map" data-pin="{l["slug"]}" style="white-space:nowrap;font-size:.875rem">On the map <span aria-hidden="true">&#8595;</span></a>' if l.get("lat") else ""
             rows.append(
                 f'<article class="l-dir-row" data-dir-row data-slug="{l["slug"]}" data-cats="{" ".join(l["categories"])}" data-search="{html.escape(search, quote=True)}">'
@@ -350,6 +405,10 @@ def denver_iso(date_str, hhmm):
         return f"{date_str}T{hhmm}:00-06:00"
 
 
+def hhmm(minutes):
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
 def events_ld(occ, days=60, cap=40):
     items = []
     end = TODAY + dt.timedelta(days=days)
@@ -357,14 +416,23 @@ def events_ld(occ, days=60, cap=40):
         d = dt.date.fromisoformat(o["date"])
         if d < TODAY or d > end:
             continue
-        ev = {
-            "@type": "Event",
-            "name": o["title"],
-            "startDate": denver_iso(o["date"], o.get("sort", "09:00")),
+        # Same reading of the organizer's time string the calendar feed uses,
+        # so a listing, its VEVENT and its rich result all agree: a published
+        # end is honoured, a start with none gets an hour, and a time that
+        # cannot be read leaves a date rather than a guessed hour.
+        times = parse_time(o.get("time"))
+        ev = {"@type": "Event", "name": o["title"]}
+        if times:
+            start, finish = times
+            ev["startDate"] = denver_iso(o["date"], hhmm(start))
+            ev["endDate"] = denver_iso(o["date"], hhmm(finish if finish is not None else min(start + 60, 24 * 60 - 1)))
+        else:
+            ev["startDate"] = o["date"]
+        ev.update({
             "eventStatus": "https://schema.org/EventScheduled",
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
             "location": {"@type": "Place", "name": o.get("venue", "Lyons, Colorado"), "address": {"@type": "PostalAddress", "streetAddress": o.get("address", ""), "addressLocality": "Lyons", "addressRegion": "CO", "postalCode": "80540", "addressCountry": "US"}},
-        }
+        })
         if o.get("organizer"):
             ev["organizer"] = {"@type": "Organization", "name": o["organizer"]}
         if o.get("detail"):
@@ -417,6 +485,196 @@ def faq_ld(body):
 
 
 # --------------------------------------------------------------- pages ----
+
+# ------------------------------------------------------------ calendar ----
+# A subscribable feed at /events.ics. One-off events become single VEVENTs;
+# the weekly and monthly series become recurring ones, so the feed keeps
+# working between rebuilds instead of running out at the site's horizon.
+
+CLOCK_RE = re.compile(r"^\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*$", re.I)
+ICS_DAYS = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"]
+SERIES_ANCHOR = TODAY  # recurrence starts at the next occurrence, not in the past
+
+
+def parse_clock(part, fallback_meridiem=None):
+    m = CLOCK_RE.match(part)
+    if not m:
+        return None
+    h, mins = int(m.group(1)), int(m.group(2) or 0)
+    mer = (m.group(3) or fallback_meridiem or "").lower()
+    if not mer or not (1 <= h <= 12):
+        return None
+    if mer == "pm" and h != 12:
+        h += 12
+    if mer == "am" and h == 12:
+        h = 0
+    return h * 60 + mins
+
+
+def parse_time(s):
+    """'5-8 pm' -> (1020, 1200) in minutes past midnight. A single time gives
+    (start, None); anything unparseable gives None, and the event goes in as
+    all-day rather than at a guessed hour."""
+    if not s:
+        return None
+    s = s.replace("\u2013", "-").replace("\u2014", "-")
+    if "-" not in s:
+        start = parse_clock(s)
+        return (start, None) if start is not None else None
+    left, right = s.split("-", 1)
+    end = parse_clock(right)
+    if end is None:
+        return None
+    start = parse_clock(left)
+    if start is None:
+        # "5-8 pm": the left side borrows the right side's am/pm, unless that
+        # would put the start after the end ("11-1 pm").
+        mer = "pm" if end >= 12 * 60 else "am"
+        start = parse_clock(left, mer)
+        if start is not None and start >= end:
+            alt = parse_clock(left, "am" if mer == "pm" else "pm")
+            if alt is not None and alt < end:
+                start = alt
+    if start is None:
+        return None
+    return (start, end)
+
+
+def ics_escape(s):
+    return (str(s).replace("\\", "\\\\").replace(";", "\;")
+            .replace(",", "\\,").replace("\r\n", "\\n").replace("\n", "\\n"))
+
+
+def ics_fold(line):
+    """RFC 5545 caps a content line at 75 octets; the rest continues on the
+    next line behind a single space. Fold on octets, not characters, so
+    multi-byte text is never cut in half."""
+    raw = line.encode("utf-8")
+    if len(raw) <= 75:
+        return line
+    parts, first = [], True
+    while raw:
+        cut = min(75 if first else 74, len(raw))  # continuations carry a space
+        while 0 < cut < len(raw) and (raw[cut] & 0xC0) == 0x80:
+            cut -= 1
+        parts.append(raw[:cut].decode("utf-8"))
+        raw, first = raw[cut:], False
+    return "\r\n ".join(parts)
+
+
+def ics_dt(date_str, minutes):
+    d = dt.date.fromisoformat(date_str)
+    return f"{d.strftime('%Y%m%d')}T{minutes // 60:02d}{minutes % 60:02d}00"
+
+
+def ics_event(ev, date_str, uid, rrule=None, exdates=()):
+    times = parse_time(ev.get("time"))
+    lines = [
+        "BEGIN:VEVENT",
+        f"UID:{uid}",
+        f"DTSTAMP:{ICS_STAMP}",
+        f"SUMMARY:{ics_escape(ev['title'])}",
+    ]
+    if times:
+        start, end = times
+        lines.append(f"DTSTART;TZID=America/Denver:{ics_dt(date_str, start)}")
+        # No published end time: an hour keeps the entry visible in clients
+        # that need a duration, and the listed time goes in the description.
+        lines.append(f"DTEND;TZID=America/Denver:{ics_dt(date_str, end if end is not None else min(start + 60, 24 * 60 - 1))}")
+    else:
+        d = dt.date.fromisoformat(date_str)
+        lines.append(f"DTSTART;VALUE=DATE:{d.strftime('%Y%m%d')}")
+        lines.append(f"DTEND;VALUE=DATE:{(d + dt.timedelta(days=1)).strftime('%Y%m%d')}")
+    if rrule:
+        lines.append(f"RRULE:{rrule}")
+    for x in exdates:
+        if times:
+            lines.append(f"EXDATE;TZID=America/Denver:{ics_dt(x, times[0])}")
+        else:
+            lines.append(f"EXDATE;VALUE=DATE:{dt.date.fromisoformat(x).strftime('%Y%m%d')}")
+    where = " \u00b7 ".join(x for x in [ev.get("venue"), ev.get("address")] if x)
+    if where:
+        lines.append(f"LOCATION:{ics_escape(where + ', Lyons, CO 80540')}")
+    desc = [x for x in [ev.get("detail")] if x]
+    if ev.get("time") and not times:
+        desc.append(f"Listed time: {ev['time']}.")
+    elif ev.get("time") and times and times[1] is None:
+        desc.append(f"Listed time: {ev['time']} (no end time published).")
+    meta = " \u00b7 ".join(x for x in [ev.get("organizer"), ev.get("cost")] if x)
+    if meta:
+        desc.append(meta)
+    if ev.get("url"):
+        desc.append(ev["url"])
+        lines.append(f"URL:{ics_escape(ev['url'])}")
+    desc.append(f"Listing: {SITE}/events/")
+    lines.append(f"DESCRIPTION:{ics_escape(chr(10).join(desc))}")
+    lines.append("END:VEVENT")
+    return lines
+
+
+def ics_feed(data):
+    body = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//ExploreLyons.com//Lyons Colorado events//EN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "X-WR-CALNAME:Lyons\\, Colorado events",
+        "X-WR-CALDESC:Events in Lyons\\, Colorado\\, from ExploreLyons.com. Times come from the organizer; check their page before setting out.",
+        "X-WR-TIMEZONE:America/Denver",
+        "REFRESH-INTERVAL;VALUE=DURATION:PT12H",
+        "X-PUBLISHED-TTL:PT12H",
+        # US rules since 2007: second Sunday in March, first Sunday in November.
+        "BEGIN:VTIMEZONE",
+        "TZID:America/Denver",
+        "X-LIC-LOCATION:America/Denver",
+        "BEGIN:DAYLIGHT",
+        "TZOFFSETFROM:-0700",
+        "TZOFFSETTO:-0600",
+        "TZNAME:MDT",
+        "DTSTART:20070311T020000",
+        "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU",
+        "END:DAYLIGHT",
+        "BEGIN:STANDARD",
+        "TZOFFSETFROM:-0600",
+        "TZOFFSETTO:-0700",
+        "TZNAME:MST",
+        "DTSTART:20071104T020000",
+        "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU",
+        "END:STANDARD",
+        "END:VTIMEZONE",
+    ]
+    count = 0
+    for ev in data["events"]:
+        start = dt.date.fromisoformat(ev["date"])
+        end = dt.date.fromisoformat(ev.get("end", ev["date"]))
+        day = start
+        while day <= end:
+            # Most ids already carry their date; only a multi-day event needs one.
+            uid = ev["id"] if start == end else f"{ev['id']}-{day.isoformat()}"
+            body += ics_event(ev, day.isoformat(), f"{uid}@explorelyons.com")
+            count += 1
+            day += dt.timedelta(days=1)
+    for s in data.get("series", []):
+        # First occurrence on or after the anchor, so the rule has a real start.
+        day = SERIES_ANCHOR
+        for _ in range(400):
+            if day.weekday() == s["weekday"]:
+                nth = (day.day - 1) // 7 + 1
+                if "weeks" not in s or nth in s["weeks"]:
+                    break
+            day += dt.timedelta(days=1)
+        else:
+            continue
+        dow = ICS_DAYS[s["weekday"]]
+        rule = (f"FREQ=MONTHLY;BYDAY={','.join(str(n) + dow for n in s['weeks'])}"
+                if "weeks" in s else f"FREQ=WEEKLY;BYDAY={dow}")
+        skips = [x for x in s.get("skip", []) if dt.date.fromisoformat(x) >= day]
+        body += ics_event(s, day.isoformat(), f"{s['id']}@explorelyons.com", rrule=rule, exdates=skips)
+        count += 1
+    body.append("END:VCALENDAR")
+    return "\r\n".join(ics_fold(l) for l in body) + "\r\n", count
+
 
 META_RE = re.compile(r"^<!--meta\s*(\{.*?\})\s*-->\s*", re.S)
 
@@ -474,6 +732,68 @@ def jsonld(meta, extra=None):
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/")
 
 
+def check_form_csp():
+    """The CSP in vercel.json names the origins the browser may reach. A form
+    endpoint is reached two ways -- fetch() for visitors with scripting, and an
+    ordinary POST for those without -- so its origin has to appear in both
+    connect-src and form-action or the form fails silently in production while
+    working perfectly on a local file server. Rather than leave that to be
+    discovered after launch, the build refuses to produce a site that would do
+    it."""
+    if not FORM_ENDPOINT:
+        return
+    from urllib.parse import urlparse
+    parts = urlparse(FORM_ENDPOINT)
+    if not parts.netloc:
+        return  # same-origin: 'self' in the policy already covers it
+    origin = f"{parts.scheme}://{parts.netloc}"
+    conf = os.path.join(ROOT, "vercel.json")
+    if not os.path.exists(conf):
+        return
+    csp = ""
+    for rule in json.loads(read(conf)).get("headers", []):
+        for h in rule.get("headers", []):
+            if h.get("key", "").lower() == "content-security-policy":
+                csp = h["value"]
+    if not csp:
+        return
+    missing = [d for d in ("connect-src", "form-action")
+               if origin not in csp.split(d, 1)[-1].split(";", 1)[0]]
+    if missing:
+        raise SystemExit(
+            f"build.py: FORM_ENDPOINT is {FORM_ENDPOINT}, but the "
+            f"Content-Security-Policy in vercel.json does not allow {origin} in "
+            f"{' and '.join(missing)}.\nAdd it there, or submissions will be "
+            f"blocked in the browser once this deploys."
+        )
+
+
+def contact_form():
+    """The form's attributes, and the note shown when there is no endpoint.
+
+    With an endpoint the form is an ordinary POST, so it works with scripting
+    off; `_next` sends those visitors to /thanks/. Without one there is no
+    action to give it, so the no-script note carries the email address."""
+    if FORM_ENDPOINT:
+        attrs = (f'data-endpoint="{html.escape(FORM_ENDPOINT, quote=True)}" method="post" '
+                 f'action="{html.escape(FORM_ENDPOINT, quote=True)}"')
+        # _next is how the off-site form services are told where to send a
+        # visitor who has no scripting. api/contact.py redirects to /thanks/
+        # itself, and deliberately ignores any target given in the request, so
+        # the field is only worth sending to a service that expects it.
+        offsite = FORM_ENDPOINT.startswith(("http://", "https://"))
+        hidden = f'<input type="hidden" name="_next" value="{SITE}/thanks/">' if offsite else ""
+        note = ""
+    else:
+        attrs = 'data-endpoint=""'
+        hidden = ""
+        note = ('<noscript><p class="l-small" style="margin:0;max-width:54ch;color:var(--l-gold-lt)">'
+                'This form is not connected to a mail service yet, so the button will not send '
+                'anything. Write to <a href="mailto:editor@explorelyons.com" '
+                'style="color:var(--l-gold-lt)">editor@explorelyons.com</a> instead.</p></noscript>')
+    return attrs, hidden, note
+
+
 def build():
     if os.path.exists(OUT):
         shutil.rmtree(OUT)
@@ -483,7 +803,9 @@ def build():
         if os.path.exists(p):
             shutil.copy(p, os.path.join(OUT, f))
 
+    check_form_csp()
     layout = read(os.path.join(SRC, "layout.html"))
+    form_attrs, form_hidden, form_noscript = contact_form()
     events = load_json("events.json")
     occ = expand_events(events)
     biz = load_json("businesses.json")
@@ -524,6 +846,9 @@ def build():
         for k, v in directory.items():
             body = body.replace("{{dir_" + k + "}}", v)
         body = body.replace("{{today_long}}", TODAY.strftime("%B ") + str(TODAY.day) + TODAY.strftime(", %Y"))
+        body = body.replace("{{form_attrs}}", form_attrs)
+        body = body.replace("{{form_hidden}}", form_hidden)
+        body = body.replace("{{form_noscript}}", form_noscript)
         body = expand_pictures(body)
 
         nav_html = "\n".join(
@@ -536,7 +861,14 @@ def build():
             "title": html.escape(meta["title"], quote=True),
             "description": html.escape(meta["description"], quote=True),
             "path": meta["path"],
-            "og_image": meta.get("og_image", "downtown"),
+            # One robots directive per page, not two that contradict each
+            # other, and no canonical on the 404: it is served at whatever
+            # address was missed, so it has no address of its own.
+            "robots": ('<meta name="robots" content="noindex, follow">' if meta.get("noindex")
+                       else '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">'),
+            "canonical": ('' if meta.get("canonical") is False
+                          else f'<link rel="canonical" href="{SITE}{meta["path"]}">'),
+            "og_image_url": og_image_url(meta.get("og_image", "downtown")),
             "og_alt": html.escape(meta.get("og_alt", "Main Street in Lyons, Colorado, with the red sandstone hogback behind"), quote=True),
             "head_extra": meta.get("head_extra", ""),
             "jsonld": jsonld(meta, {
@@ -553,6 +885,7 @@ def build():
             "reviewed": REVIEWED,
         }.items():
             page = page.replace("{{" + k + "}}", v)
+        page = version_assets(page)
         out_path = os.path.join(OUT, meta["path"].strip("/"), "index.html") if meta["path"] != "/" else os.path.join(OUT, "index.html")
         write(out_path, page)
         if meta.get("sitemap", True):
@@ -562,11 +895,26 @@ def build():
     shutil.copy(os.path.join(OUT, "404", "index.html"), os.path.join(OUT, "404.html"))
     shutil.rmtree(os.path.join(OUT, "404"))
 
+    ics, ics_count = ics_feed(events)
+    write(os.path.join(OUT, "events.ics"), ics)
+
     write(os.path.join(OUT, "sitemap.xml"),
           '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n" for u in urls)
           + "</urlset>\n")
-    print(f"built {len(urls)} pages into public/ ({len(occ)} event occurrences, reviewed {REVIEWED})")
+    print(f"built {len(urls)} pages into public/ ({len(occ)} event occurrences, "
+          f"{ics_count} calendar entries, reviewed {REVIEWED})")
+
+    # Gaps in the directory that cost a visitor something, said out loud once a
+    # build rather than left to be noticed. A listing with no coordinates is
+    # simply absent from the maps, which is not visible from the page itself.
+    nopin = [l["name"] for l in biz["listings"] if not l.get("lat")]
+    nourl = [l["name"] for l in biz["listings"] if not l.get("url")]
+    for label, names in (("no coordinates, so absent from the maps", nopin),
+                         ("no link", nourl)):
+        if names:
+            print(f"  note: {len(names)} listing{'' if len(names) == 1 else 's'} with {label}: "
+                  + ", ".join(sorted(names)))
 
 
 if __name__ == "__main__":

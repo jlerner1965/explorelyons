@@ -1,0 +1,37 @@
+# The build bakes the current date in: which events are "this weekend", how far
+# the weekly and first-and-third-Monday fixtures are expanded, the sitemap's
+# lastmod, and the "Reviewed" line in the footer. A site deployed once and left
+# alone quietly stops rolling forward, so it is redeployed every morning
+# whether or not anything was committed.
+#
+# Needs one repository secret: VERCEL_DEPLOY_HOOK, the URL of a Deploy Hook
+# created in the Vercel project under Settings -> Git -> Deploy Hooks.
+#
+# GitHub disables scheduled workflows in a repository with no activity for 60
+# days and emails the owner; re-enable it from the Actions tab if that happens.
+name: Nightly rebuild
+
+on:
+  schedule:
+    - cron: '17 11 * * *'  # 05:17 in Lyons on mountain daylight time, 04:17 on standard
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger the Vercel deploy hook
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::VERCEL_DEPLOY_HOOK is not set. Create a Deploy Hook in the Vercel project (Settings -> Git -> Deploy Hooks) and add its URL as a repository secret of that name."
+            exit 1
+          fi
+          code=$(curl -sS -X POST -o body.txt -w '%{http_code}' "$HOOK")
+          echo "deploy hook responded $code"
+          cat body.txt
+          case "$code" in
+            200|201) ;;
+            *) echo "::error::deploy hook returned $code"; exit 1 ;;
+          esac

@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{title}}</title>
 <meta name="description" content="{{description}}">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-<link rel="canonical" href="https://explorelyons.com{{path}}">
+{{robots}}
+{{canonical}}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="ExploreLyons.com">
 <meta property="og:title" content="{{title}}">
 <meta property="og:description" content="{{description}}">
 <meta property="og:url" content="https://explorelyons.com{{path}}">
-<meta property="og:image" content="https://explorelyons.com/assets/photos/{{og_image}}-1400.jpg">
+<meta property="og:image" content="{{og_image_url}}">
 <meta property="og:image:alt" content="{{og_alt}}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -21,6 +21,7 @@
 <link rel="preload" href="/assets/fonts/fraunces-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/bricolage-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/guide.css">
+<noscript><style>@media (max-width:1180px){.l-burger{display:none}.l-nav{display:flex;position:static;padding:0 0 12px;border-bottom:0}}.l-cal,[data-dir-filters],.l-dir-select{display:none}</style></noscript>
 <script src="/assets/js/guide.js" defer></script>
 {{head_extra}}
 <script type="application/ld+json">{{jsonld}}</script>
@@ -28,7 +29,7 @@
 <body>
 <div class="{{body_class}}">
 <a class="l-skip" href="#main">Skip to main content</a>
-<header class="l-head"><noscript><style>@media (max-width:1180px){.l-burger{display:none}.l-nav{display:flex;position:static;padding:0 0 12px;border-bottom:0}}</style></noscript>
+<header class="l-head">
 <div class="l-wrap l-head-in">
 <a class="l-mark" href="/"><span class="l-eyebrow">Explore</span><span class="l-word">LYONS</span><small>Things to do in Lyons, Colorado</small></a>
 <button class="l-burger" type="button" aria-expanded="false" aria-controls="l-menu" aria-label="Open menu"><span></span><span></span><span></span></button>
@@ -58,6 +59,7 @@
 <a href="/stay/">Stay the night</a>
 <a href="/outdoors/">Trails &amp; the river</a>
 <a href="/events/">Events</a>
+<a href="/events/#subscribe">Calendar feed</a>
 <a href="/plan-a-visit/">Plan a visit</a>
 </div>
 <div class="l-foot-col">
