@@ -56,9 +56,6 @@ explains that nothing was sent and gives the editor's email address.
 (`python3 build.py`) and output directory (`public`), so no framework preset is
 needed. Add `explorelyons.com` under the project's Domains.
 
-**GitHub Pages**: `.github/workflows/pages.yml` builds and deploys `public/` on
-every push to `main`; `src/static/CNAME` carries `explorelyons.com`.
-
 Any other static host works: point it at `public/` after running `build.py`.
 
 ## Credits
