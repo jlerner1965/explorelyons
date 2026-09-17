@@ -25,12 +25,13 @@
 <div class="l-g2">
 <div>
 <h2 class="l-label" id="contact-h" style="margin:0">The form</h2>
-<form data-contact-form data-endpoint="" method="post" action="mailto:editor@explorelyons.com" style="display:grid;gap:18px;max-width:560px;margin-top:20px">
+<form data-contact-form {{form_attrs}} style="display:grid;gap:18px;max-width:560px;margin-top:20px">
 <div class="l-sr" aria-hidden="true">
 <label for="v-company">Leave this field empty</label>
 <input id="v-company" name="_gotcha" type="text" tabindex="-1" autocomplete="off">
 </div>
 <input type="hidden" name="_subject" value="ExploreLyons.com submission">
+{{form_hidden}}
 <div>
 <label class="l-label" for="v-kind" style="color:var(--l-gold-lt)">What is this?</label>
 <select class="l-field" id="v-kind" name="kind">
@@ -70,6 +71,7 @@
 <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
 <button class="l-btn" type="submit" style="cursor:pointer;font-family:inherit">Send submission</button>
 </div>
+{{form_noscript}}
 <p class="l-small" style="margin:0;max-width:54ch;color:var(--l-sage-lt)">By sending this you agree that the editor may check it against its source and publish what it supports, with the date it was verified. Sending it does not guarantee publication, and nothing is published without review. Your email is optional and is used only to reply about this submission. <a href="/privacy/">How submissions are handled</a>.</p>
 </form>
 <template data-form-success><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--l-gold-lt);max-width:54ch;color:var(--l-white)">Thank you &#8212; your submission has been sent. It will be checked against its source before anything is published.</p></template>

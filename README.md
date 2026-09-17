@@ -96,9 +96,16 @@ at a guessed hour. The feed carries a `VTIMEZONE` for `America/Denver`, so a
 
 ### The contact form
 
-`src/pages/contact.html` has `data-endpoint=""` on the form. Put a Formspree
-(or similar) endpoint there and submissions post to it; until then the form
-explains that nothing was sent and gives the editor's email address.
+`FORM_ENDPOINT` at the top of `build.py` is the only thing to set. Paste a
+Formspree (or Basin, Formsubmit, …) endpoint there and both paths start
+working: `fetch()` for visitors with scripting, and an ordinary form POST for
+those without, which lands on `/thanks/` via the `_next` field. Left empty, the
+form says plainly that nothing was sent and gives the editor's email address
+rather than pretending to deliver.
+
+**This is the one thing the site cannot launch without.** "Submit a listing"
+is in the nav and footer of every page, and it is the only route for
+corrections.
 
 ## Deploy
 
@@ -107,6 +114,14 @@ explains that nothing was sent and gives the editor's email address.
 needed. Add `explorelyons.com` under the project's Domains.
 
 Any other static host works: point it at `public/` after running `build.py`.
+
+Everything under `/assets` is served `immutable` for a year. That is safe
+because the build stamps the stylesheet and the scripts with a hash of their
+own contents (`/assets/js/guide.js?v=7508c22c`), so the URL changes whenever
+the file does. Photographs and fonts get new names when they change, so they
+need no stamp. The one exception is the vendored Leaflet under
+`/assets/vendor/`: it is version-pinned, so swapping it means renaming the
+folder or clearing the CDN cache.
 
 ## Credits
 

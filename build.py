@@ -14,6 +14,7 @@ expanded to a <picture> with jpeg and webp sources. Directory rows and event
 lists are rendered from src/data/*.json so every page works without script.
 """
 import datetime as dt
+import hashlib
 import html
 import json
 import os
@@ -28,6 +29,14 @@ SITE = "https://explorelyons.com"
 TODAY = dt.date.today()
 REVIEWED = TODAY.strftime("%B %Y")
 ICS_STAMP = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+# Where the contact form posts. Formspree, Basin, Formsubmit and the rest all
+# accept a plain POST of the form fields, so any of them works here: paste the
+# endpoint URL and both paths start working at once -- fetch() for visitors
+# with scripting, and an ordinary form POST (landing on /thanks/) for those
+# without. Left empty, the form says plainly that nothing was sent and offers
+# the editor's address instead, rather than pretending to deliver.
+FORM_ENDPOINT = ""
 
 NAV = [
     ("explore", "/explore/", "Explore"),
@@ -86,6 +95,14 @@ def photo_dims(name):
     return PHOTO_DIMS[name]
 
 
+def og_image_url(name):
+    """Absolute URL of the largest rendered width of a photo. Not every photo
+    reaches 1400px, so the width is looked up rather than assumed: a card
+    pointing at a width that was never written is a broken share image."""
+    maxw, _ = photo_dims(name)
+    return f"{SITE}/assets/photos/{name}-{maxw}.jpg"
+
+
 def picture(attrs):
     name = attrs["name"]
     alt = attrs.get("alt", "")
@@ -103,6 +120,29 @@ def picture(attrs):
         f'alt="{html.escape(alt, quote=True)}" width="{w}" height="{h}" loading="{loading}" decoding="async"{fetch}'
         f'{" style=" + chr(34) + html.escape(style, quote=True) + chr(34) if style else ""}></picture>'
     )
+
+
+ASSET_RE = re.compile(r"/assets/(?:css|js)/[A-Za-z0-9._-]+\.(?:css|js)")
+ASSET_HASH = {}
+
+
+def version(url):
+    """`/assets/js/guide.js` -> `/assets/js/guide.js?v=1a2b3c4d`.
+
+    Everything under /assets is served with a one-year immutable
+    Cache-Control, which is right for the photographs and the fonts (their
+    names change when they do) but wrong for the stylesheet and the scripts,
+    which are edited in place. Stamping the content hash on the URL is what
+    makes the header honest: edit the file and returning visitors get the new
+    one, leave it alone and nobody refetches it."""
+    if url not in ASSET_HASH:
+        with open(os.path.join(SRC, url.lstrip("/")), "rb") as f:
+            ASSET_HASH[url] = hashlib.sha256(f.read()).hexdigest()[:8]
+    return f"{url}?v={ASSET_HASH[url]}"
+
+
+def version_assets(text):
+    return ASSET_RE.sub(lambda m: version(m.group(0)), text)
 
 
 PIC_RE = re.compile(r"\{\{pic\s+([^}]*)\}\}")
@@ -665,6 +705,27 @@ def jsonld(meta, extra=None):
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/")
 
 
+def contact_form():
+    """The form's attributes, and the note shown when there is no endpoint.
+
+    With an endpoint the form is an ordinary POST, so it works with scripting
+    off; `_next` sends those visitors to /thanks/. Without one there is no
+    action to give it, so the no-script note carries the email address."""
+    if FORM_ENDPOINT:
+        attrs = (f'data-endpoint="{html.escape(FORM_ENDPOINT, quote=True)}" method="post" '
+                 f'action="{html.escape(FORM_ENDPOINT, quote=True)}"')
+        hidden = f'<input type="hidden" name="_next" value="{SITE}/thanks/">'
+        note = ""
+    else:
+        attrs = 'data-endpoint=""'
+        hidden = ""
+        note = ('<noscript><p class="l-small" style="margin:0;max-width:54ch;color:var(--l-gold-lt)">'
+                'This form is not connected to a mail service yet, so the button will not send '
+                'anything. Write to <a href="mailto:editor@explorelyons.com" '
+                'style="color:var(--l-gold-lt)">editor@explorelyons.com</a> instead.</p></noscript>')
+    return attrs, hidden, note
+
+
 def build():
     if os.path.exists(OUT):
         shutil.rmtree(OUT)
@@ -675,6 +736,7 @@ def build():
             shutil.copy(p, os.path.join(OUT, f))
 
     layout = read(os.path.join(SRC, "layout.html"))
+    form_attrs, form_hidden, form_noscript = contact_form()
     events = load_json("events.json")
     occ = expand_events(events)
     biz = load_json("businesses.json")
@@ -715,6 +777,9 @@ def build():
         for k, v in directory.items():
             body = body.replace("{{dir_" + k + "}}", v)
         body = body.replace("{{today_long}}", TODAY.strftime("%B ") + str(TODAY.day) + TODAY.strftime(", %Y"))
+        body = body.replace("{{form_attrs}}", form_attrs)
+        body = body.replace("{{form_hidden}}", form_hidden)
+        body = body.replace("{{form_noscript}}", form_noscript)
         body = expand_pictures(body)
 
         nav_html = "\n".join(
@@ -727,7 +792,7 @@ def build():
             "title": html.escape(meta["title"], quote=True),
             "description": html.escape(meta["description"], quote=True),
             "path": meta["path"],
-            "og_image": meta.get("og_image", "downtown"),
+            "og_image_url": og_image_url(meta.get("og_image", "downtown")),
             "og_alt": html.escape(meta.get("og_alt", "Main Street in Lyons, Colorado, with the red sandstone hogback behind"), quote=True),
             "head_extra": meta.get("head_extra", ""),
             "jsonld": jsonld(meta, {
@@ -744,6 +809,7 @@ def build():
             "reviewed": REVIEWED,
         }.items():
             page = page.replace("{{" + k + "}}", v)
+        page = version_assets(page)
         out_path = os.path.join(OUT, meta["path"].strip("/"), "index.html") if meta["path"] != "/" else os.path.join(OUT, "index.html")
         write(out_path, page)
         if meta.get("sitemap", True):
