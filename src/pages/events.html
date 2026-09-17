@@ -1,0 +1,117 @@
+<!--meta
+{
+  "title": "Lyons, Colorado Events Calendar | ExploreLyons.com",
+  "description": "Upcoming events in Lyons, Colorado: concerts and weekly picks, Town meetings, library programs, artisan markets, RockyGrass and the Folks Festival, with every date checked against the organizer's own page.",
+  "path": "/events/",
+  "nav": "events",
+  "crumb": "Events",
+  "og_image": "outlaw-saloon",
+  "head_extra": "<script src=\"/assets/js/events.js\" defer></script>"
+}
+-->
+<section class="l-bg-white" aria-labelledby="title-h">
+<div class="l-wrap" style="padding-top:clamp(28px,4vw,60px);padding-bottom:clamp(36px,5vw,72px)">
+<div class="l-g2-wide" style="align-items:end">
+<div>
+<div class="l-label">Come for what&#8217;s happening</div>
+<h1 class="l-display" id="title-h" style="margin-top:14px;font-size:clamp(2.75rem,2rem + 3vw,5.25rem);line-height:.93;max-width:10ch;color:var(--l-evergreen)">Lyons Events Calendar</h1>
+<p class="l-lead" style="margin:clamp(20px,2.5vw,32px) 0 0;max-width:46ch">Concerts, picks, markets, library programs and the Town's public meetings, with every date checked against the organizer&#8217;s own page.</p>
+<p class="l-small" style="margin:16px 0 0;max-width:46ch">Times are Mountain Time. Past events leave the upcoming list on their own.</p>
+</div>
+<figure class="l-photo-natural" style="margin:0">
+{{pic name="outlaw-saloon" alt="Carved red sandstone slabs reading Welcome to Lyons on a stone patio under cottonwood trees" sizes="(max-width: 900px) calc(100vw - 48px), 55vw"}}
+<figcaption class="l-cap">A sandstone welcome on Main Street</figcaption>
+</figure>
+</div>
+</div>
+</section>
+
+<section class="l-bg-paper l-pad-sm" aria-labelledby="next-h" style="border-top:1px solid var(--l-rule);border-bottom:1px solid var(--l-rule)">
+<div class="l-wrap">
+<div class="l-g2-wide">
+<div>
+<div class="l-label">About this calendar</div>
+<h2 class="l-h3" style="margin-top:12px;color:var(--l-evergreen)">Confirmed dates, without the clutter.</h2>
+<p class="l-small" style="margin:14px 0 0;max-width:46ch">This is a curated list, not the whole calendar. The Town&#8217;s community calendar carries every public meeting and Town event; the Lyons Recorder lists what the venues, the library and the clubs publish. An entry is added here only after its date has been read on one of those pages.</p>
+<div class="l-btns" style="margin-top:16px">
+<a class="l-btn" href="https://www.lyonscolorado.com/calendar.aspx" rel="noopener">Town calendar <span aria-hidden="true">&#8599;</span></a>
+<a class="l-btn l-btn--ghost" href="https://lyonsrecorder.org/events/" rel="noopener">Lyons Recorder events <span aria-hidden="true">&#8599;</span></a>
+</div>
+<a class="l-link" href="/contact/" style="display:inline-block;margin-top:18px">Submit an event <span aria-hidden="true">&#8594;</span></a>
+</div>
+<div>
+<div class="l-shead l-shead-row">
+<h2 class="l-h2" id="next-h" style="font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);color:var(--l-evergreen)">Upcoming events</h2>
+<span class="l-label l-label--quiet">Mountain Time</span>
+</div>
+<div style="display:grid;gap:22px;margin-top:22px" data-upcoming data-limit="10">{{upcoming_list}}</div>
+<p class="l-small" data-upcoming-empty hidden style="margin:20px 0 0">Nothing dated is listed right now. The annual calendar below has the season&#8217;s fixtures.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section class="l-bg-white l-pad-sm" aria-labelledby="cal-h">
+<div class="l-wrap">
+<div class="l-g2-wide" style="align-items:start">
+<div>
+<div class="l-label">Month view</div>
+<h2 class="l-h2" id="cal-h" style="margin-top:12px;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:16ch;color:var(--l-evergreen)">Pick a day</h2>
+<p class="l-small" style="margin:14px 0 0;max-width:40ch">Marked days have something on. The weekly picks and the Town Board&#8217;s first-and-third-Monday meetings are filled in for the next six months; dated one-offs appear as they are confirmed.</p>
+<noscript><p class="l-small" style="margin:14px 0 0">The month view needs scripting. The upcoming list above and the annual calendar below carry the same dates.</p></noscript>
+</div>
+<div class="l-cal" data-cal>
+<div class="l-cal-head">
+<button type="button" class="l-cal-btn" data-cal-nav="-1" aria-label="Previous month">&#8592; Prev</button>
+<span class="l-h3" data-cal-label aria-live="polite" style="color:var(--l-evergreen)">Calendar</span>
+<button type="button" class="l-cal-btn" data-cal-nav="1" aria-label="Next month">Next &#8594;</button>
+</div>
+<div class="l-cal-grid" data-cal-grid role="grid" aria-label="Month calendar"></div>
+<div class="l-cal-list" data-cal-list aria-live="polite"></div>
+</div>
+</div>
+<script type="application/json" data-cal-data>{{events_json}}</script>
+</div>
+</section>
+
+<section class="l-bg-green l-pad" aria-labelledby="annual-h">
+<div class="l-wrap">
+<div class="l-shead">
+<div class="l-label">The year in Lyons</div>
+<h2 class="l-h2" id="annual-h">Annual events</h2>
+<p class="l-body" style="margin:0;max-width:72ch">The fixtures that come round each year. Exact dates are set by the organizers and go into the upcoming list above once they are published; until then, the month is the best guide.</p>
+</div>
+<dl class="l-dl" style="margin-top:8px">
+<div><dt>February</dt><dd><strong>Old Man Winter Bike Rally &amp; Run.</strong> Mixed-terrain 50K and 100K rides and a 10K run out of Bohn Park, with a party at the finish. <a class="l-link" href="https://www.lyonscolorado.com/764/Events-and-Activities" rel="noopener">Town events page <span aria-hidden="true">&#8599;</span></a></dd></div>
+<div><dt>Valentine&#8217;s Day</dt><dd><strong>Lyons Polar Plunge.</strong> A charity dip in the St. Vrain by the Lyons Polar Bear Club.</dd></div>
+<div><dt>March</dt><dd><strong>Lucky Lyons 5K &amp; 10K.</strong> A St. Patrick&#8217;s-season run through town.</dd></div>
+<div><dt>April</dt><dd><strong>Earth Day Celebration.</strong> Town-organized clean-ups and a festival in the park.</dd></div>
+<div><dt>June</dt><dd><strong>Lyons Outdoor Games.</strong> Trail running, kayaking, mountain biking, dog events and a beer garden across Bohn Park and the whitewater park.</dd></div>
+<div><dt>June to August</dt><dd><strong>Sandstone Summer Concert Series.</strong> Free concerts in Sandstone Park, downtown, on summer evenings.</dd></div>
+<div><dt>Late July</dt><dd><strong>RockyGrass.</strong> Three days of traditional bluegrass at Planet Bluegrass; the 2026 festival ran July 24&#8211;26. <a class="l-link" href="https://bluegrass.com/rockygrass" rel="noopener">bluegrass.com <span aria-hidden="true">&#8599;</span></a></dd></div>
+<div><dt>Mid-August</dt><dd><strong>Rocky Mountain Folks Festival.</strong> The songwriter festival on the Planet Bluegrass ranch; the 36th ran August 7&#8211;9, 2026. <a class="l-link" href="https://bluegrass.com/folks" rel="noopener">bluegrass.com <span aria-hidden="true">&#8599;</span></a></dd></div>
+<div><dt>Summer and fall</dt><dd><strong>Artisan Markets.</strong> Town-run markets of Colorado makers, usually in Bohn Park; the fall market was September 12, 2026.</dd></div>
+<div><dt>Late October</dt><dd><strong>Halloween Spooktacular.</strong> Trick-or-treating and a costume parade along Main Street.</dd></div>
+<div><dt>Early December</dt><dd><strong>Parade of Lights.</strong> The holiday parade down Main Street, followed by the tree lighting.</dd></div>
+</dl>
+</div>
+</section>
+
+<section class="l-bg-white l-pad-sm" aria-labelledby="weekly-h">
+<div class="l-wrap">
+<div class="l-g2-wide" style="align-items:start">
+<div>
+<div class="l-label">Most weeks</div>
+<h2 class="l-h2" id="weekly-h" style="margin-top:12px;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.25rem);max-width:16ch;color:var(--l-evergreen)">The weekly rhythm</h2>
+<p class="l-small" style="margin:14px 0 0;max-width:40ch">Standing dates at the taprooms and Town Hall. Each is in the month view above; a holiday or a private event can pre-empt one, so the venue&#8217;s page is the last word.</p>
+</div>
+<dl class="l-dl" style="margin:0">
+<div><dt>Sunday</dt><dd><strong>Sunday Serenade</strong>, Oskar Blues, 5&#8211;7 pm. No cover.</dd></div>
+<div><dt>Monday</dt><dd><strong>Open Mic</strong>, the Rock Garden, 6&#8211;9 pm, weather permitting. <strong>Board of Trustees</strong>, Town Hall, 7 pm on the first and third Mondays.</dd></div>
+<div><dt>Tuesday</dt><dd><strong>Bluegrass Pick</strong>, Oskar Blues, 6&#8211;8:30 pm. <strong>Trivia</strong>, MainStage Brewing, 6:30&#8211;8:30 pm.</dd></div>
+<div><dt>Thursday</dt><dd><strong>Open Bluegrass Pick&#8217;n</strong>, MainStage Brewing, 6&#8211;9 pm.</dd></div>
+<div><dt>Friday and Saturday</dt><dd>Touring and local acts at Oskar Blues, MainStage, the Rock Garden and Spirit Hound; see each venue&#8217;s page.</dd></div>
+</dl>
+</div>
+</div>
+</section>
