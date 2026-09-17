@@ -484,3 +484,61 @@ legend { padding: 0; }
 .l-season:nth-child(even) { border-top-color: var(--l-river); background-image: linear-gradient(var(--l-river-lt), var(--l-river-lt)); }
 .l-season figure { margin: 0 0 14px; }
 .l-season img { width: 100%; height: clamp(150px, 14vw, 200px); object-fit: cover; clip-path: polygon(var(--l-chamfer) 0, 100% 0, 100% calc(100% - var(--l-chamfer)), calc(100% - var(--l-chamfer)) 100%, 0 100%, 0 var(--l-chamfer)); }
+
+/* ---- discovery pass -------------------------------------------------------
+   The wordmark gains an eyebrow that says what the site is for; the home page
+   gains a weekend module and a river chip; the Eat, Stay and Outdoors pages
+   gain a map; the Outdoors page gains tables for levels and trails. */
+
+/* wordmark: "Explore" set small above LYONS */
+.l-mark { display: inline-block; }
+.l-mark .l-eyebrow { display: block; font-family: var(--l-sans); font-size: .58rem; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: var(--l-sandstone-ink); margin-bottom: 3px; }
+
+/* the weekend module and the river chip */
+.l-home-weekend { background: var(--l-paper); border-top: 1px solid var(--l-rule); border-bottom: 1px solid var(--l-rule); }
+.l-gauge { display: grid; gap: 3px; min-width: 240px; padding: 14px 16px; border-left: 4px solid var(--l-river); background: var(--l-sky-pale); text-decoration: none; color: var(--l-ink); }
+.l-gauge:hover { color: var(--l-ink); background: #DCEAEB; }
+.l-gauge-value { font-family: var(--l-serif); font-weight: 500; font-size: 1.75rem; line-height: 1; color: var(--l-river-ink); font-variation-settings: "opsz" 72; }
+.l-gauge-word { font-weight: 600; font-size: .9375rem; }
+.l-gauge-time { font-size: .78rem !important; }
+.l-gauge--offline .l-gauge-time::after { content: " Live reading unavailable right now."; }
+.l-gauge-panel { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px clamp(18px, 3vw, 40px); align-items: center; padding: clamp(20px, 3vw, 32px); border-left: 4px solid var(--l-river); background: var(--l-sky-pale); }
+.l-gauge-panel .l-gauge-value { font-size: clamp(2.5rem, 2rem + 2vw, 4rem); }
+.l-gauge-panel .l-gauge-word { font-family: var(--l-serif); font-weight: 500; font-size: clamp(1.25rem, 1.1rem + .6vw, 1.625rem); color: var(--l-redrock); }
+@media (max-width: 600px) { .l-gauge-panel { grid-template-columns: minmax(0, 1fr); } }
+
+/* river levels */
+.l-level { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px; padding: 10px 0; border-top: 1px solid var(--l-rule); font-size: .9375rem; }
+.l-level b { font-family: var(--l-serif); font-weight: 500; font-size: 1.0625rem; color: var(--l-redrock); }
+.l-level small { display: block; font-size: .8125rem; color: var(--l-muted); }
+
+/* trail table */
+.l-table { width: 100%; border-collapse: collapse; font-size: .9375rem; margin-top: clamp(20px, 2.5vw, 32px); }
+.l-table th, .l-table td { text-align: left; vertical-align: top; padding: 12px 14px 12px 0; border-top: 1px solid var(--l-rule); }
+.l-table th { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--l-muted); border-top: 0; }
+.l-table td:first-child { font-family: var(--l-serif); font-weight: 500; font-size: 1.125rem; line-height: 1.25; color: var(--l-redrock); font-variation-settings: "opsz" 24; }
+.l-table td:first-child small { display: block; margin-top: 4px; font-family: var(--l-sans); font-size: .8125rem; font-weight: 400; color: var(--l-muted); }
+@media (max-width: 760px) {
+  .l-table thead { display: none; }
+  .l-table tr { display: block; padding: 12px 0; border-top: 1px solid var(--l-rule); }
+  .l-table td { display: block; border: 0; padding: 3px 0; }
+  .l-table td[data-th]::before { content: attr(data-th) ": "; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--l-muted); }
+  .l-table td:first-child::before { content: none; }
+}
+
+/* the map */
+.l-map { position: relative; }
+.l-map-canvas { height: clamp(360px, 55vh, 620px); background: var(--l-sand); border: 1px solid var(--l-rule); }
+.l-map-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; font-size: .8125rem; color: var(--l-muted); }
+.l-map-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: -1px; }
+.l-pin span { display: block; width: 14px; height: 14px; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, .3); }
+.leaflet-container { font-family: var(--l-sans) !important; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip, .leaflet-bar, .leaflet-bar a, .leaflet-control-attribution { border-radius: 0 !important; }
+.leaflet-popup-content { font-size: .9rem; line-height: 1.45; margin: 12px 14px !important; }
+.leaflet-popup-content a { color: var(--l-river-ink); }
+
+/* stay cards */
+.l-stay-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(18px, 2.5vw, 36px); margin-top: clamp(24px, 3vw, 40px); }
+.l-stay-card { padding-top: 16px; border-top: 3px solid var(--l-gold); background-image: linear-gradient(var(--l-sandstone), var(--l-sandstone)); background-size: 100% 1px; background-repeat: no-repeat; background-position: 0 2px; }
+.l-stay-card .l-h3 { color: var(--l-redrock); }
+@media (max-width: 900px) { .l-stay-grid { grid-template-columns: minmax(0, 1fr); } }

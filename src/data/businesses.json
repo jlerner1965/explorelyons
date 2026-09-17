@@ -1,45 +1,447 @@
 {
   "note": "Each listing is checked against the business's own site or the Town of Lyons 'Visit Lyons' directory (lyonscolorado.com) and carries the date it was checked. Hours change seasonally; the linked site is the authority.",
   "categories": [
-    { "slug": "restaurants-bars", "name": "Restaurants & Bars" },
-    { "slug": "breweries-distilleries", "name": "Breweries, Distilleries & Taprooms" },
-    { "slug": "coffee-bakery", "name": "Coffee, Bakery & Sweets" },
-    { "slug": "grocery-provisions", "name": "Grocery & Provisions" },
-    { "slug": "shops-gifts", "name": "Shops & Gifts" },
-    { "slug": "arts-galleries", "name": "Arts & Galleries" },
-    { "slug": "outdoor-recreation", "name": "Outdoor & Recreation" },
-    { "slug": "stay-the-night", "name": "Stay the Night" },
-    { "slug": "venues-culture", "name": "Venues, Museums & Library" }
+    {
+      "slug": "restaurants-bars",
+      "name": "Restaurants & Bars"
+    },
+    {
+      "slug": "breweries-distilleries",
+      "name": "Breweries, Distilleries & Taprooms"
+    },
+    {
+      "slug": "coffee-bakery",
+      "name": "Coffee, Bakery & Sweets"
+    },
+    {
+      "slug": "grocery-provisions",
+      "name": "Grocery & Provisions"
+    },
+    {
+      "slug": "shops-gifts",
+      "name": "Shops & Gifts"
+    },
+    {
+      "slug": "arts-galleries",
+      "name": "Arts & Galleries"
+    },
+    {
+      "slug": "outdoor-recreation",
+      "name": "Outdoor & Recreation"
+    },
+    {
+      "slug": "stay-the-night",
+      "name": "Stay the Night"
+    },
+    {
+      "slug": "venues-culture",
+      "name": "Venues, Museums & Library"
+    }
   ],
   "listings": [
-    { "name": "Oskar Blues Grill & Brew", "categories": ["restaurants-bars", "breweries-distilleries"], "address": "303 Main St", "blurb": "The original Oskar Blues, open since 1997: Cajun-leaning kitchen, the beers that launched the craft-can movement, and live music most weeks.", "hours": "Sun–Thu 11 am–9 pm, Fri–Sat 11 am–10 pm", "url": "https://lyons.oskarbluesfooderies.com/", "checked": "Sept 17, 2026" },
-    { "name": "MainStage Brewing Company", "categories": ["breweries-distilleries", "restaurants-bars"], "address": "450 Main St", "blurb": "Brewery and pizza kitchen with a stage in the name for a reason: trivia, art openings and an open bluegrass pick on the weekly calendar.", "hours": "Tue–Sat 12–10 pm, Sun 12–9 pm", "url": "https://mainstagebrewing.com/", "checked": "Sept 17, 2026" },
-    { "name": "Spirit Hound Distillers", "categories": ["breweries-distilleries"], "address": "4196 Ute Hwy (CO 66)", "blurb": "Grain-to-glass distillery east of town making Colorado straight malt whisky, gin and rum, with a tasting room and a patio.", "hours": "Sun–Tue 11 am–8 pm, Wed–Sat 11 am–9 pm", "url": "https://spirithounds.com/", "checked": "Sept 17, 2026" },
-    { "name": "The Rock Garden", "categories": ["breweries-distilleries", "restaurants-bars"], "address": "338 W Main St (at A-Lodge)", "blurb": "Riverside bar and food garden at the west edge of town: craft beer, local spirits, a Monday open mic and a lot of outdoor seating.", "hours": "Mon & Wed–Thu 3–9 pm, Fri 3–10 pm, Sat–Sun 10 am–10 pm", "url": "https://rockgardenlyons.com/", "checked": "Sept 17, 2026" },
-    { "name": "La Mariposa", "categories": ["restaurants-bars"], "address": "112 E Main St", "blurb": "Classic Mexican kitchen at the east end of Main: molcajetes, margaritas and a patio.", "hours": "Daily 11 am–9 pm", "url": "https://lamariposarestaurants.com/", "checked": "Sept 17, 2026" },
-    { "name": "Smokin Dave's BBQ & Taphouse", "categories": ["restaurants-bars"], "address": "228 Main St", "blurb": "Slow-smoked barbecue and a long tap list, mid-block on Main.", "hours": "Daily 11 am–8 pm", "url": "https://smokindavesbbq.com/lyons/", "checked": "Sept 17, 2026" },
-    { "name": "Indian Bites", "categories": ["restaurants-bars"], "address": "432 Main St", "blurb": "Fresh curries, biryani and saag, for eating in or taking to the park.", "hours": "Mon, Tue & Thu 11 am–8 pm, Wed 4–8 pm, Fri–Sun 11 am–8:30 pm", "url": "https://indianbitesco.com/", "phone": "303-823-0390", "checked": "Sept 17, 2026" },
-    { "name": "Mojo Taqueria", "categories": ["restaurants-bars"], "address": "216 Main St", "blurb": "Regional Mexican flavors, tacos and a busy bar; dinner most nights, lunch on weekends.", "hours": "Tue–Fri 4–9 pm, Sat–Sun 11 am–9 pm", "url": "https://mojotaqueria.com/", "checked": "Sept 17, 2026" },
-    { "name": "Julie's Thai Kitchen", "categories": ["restaurants-bars"], "address": "138 Main St", "blurb": "Family-owned Thai kitchen at the east end of Main, dinner only.", "hours": "Tue–Sat 4:30–8:30 pm, Sun 4–8:30 pm", "url": "https://juliesthaikitchen.com/", "checked": "Sept 17, 2026" },
-    { "name": "Marigold", "categories": ["restaurants-bars"], "address": "405 Main St, Unit B", "blurb": "Northern Italian and southern French cooking in a small dining room; the town's dinner-out address.", "hours": "Wed–Thu & Sun 5–9 pm, Fri–Sat 5–10 pm", "url": "https://marigoldlyons.com/", "checked": "Sept 17, 2026" },
-    { "name": "Lyons Locale", "categories": ["restaurants-bars"], "address": "442 High St", "blurb": "Wine and cocktail lounge a block off Main with paninis, salads, soups and charcuterie boards.", "hours": "Thu 4–9 pm, Fri 4–10 pm, Sat 2–10 pm, Sun 2–7 pm", "url": "https://lyonslocale.com/", "phone": "303-823-6262", "checked": "Sept 17, 2026" },
-    { "name": "Lyons Dairy Bar", "categories": ["coffee-bakery", "restaurants-bars"], "address": "138 Main St", "blurb": "Burgers, sandwiches and soft-serve at a walk-up window: the post-tubing stop.", "hours": "Daily 11 am–7 pm", "url": "https://thenewlyonsdairybar.com/", "checked": "Sept 17, 2026" },
-    { "name": "Moxie Mercantile", "categories": ["coffee-bakery"], "address": "442 High St", "blurb": "Moxie Bread Co.'s Lyons outpost: coffee, pastries and loaves from the Louisville bakery.", "hours": "Daily 7 am–4 pm", "url": "https://moxiebreadco.com/moxie-mercantile", "checked": "Sept 17, 2026" },
-    { "name": "MudHut Lyons", "categories": ["coffee-bakery"], "address": "4033 Ute Hwy (CO 66)", "blurb": "Drive-through coffee on the way into town from Longmont.", "hours": "Daily 7 am–3 pm", "checked": "Sept 17, 2026" },
-    { "name": "Solace", "categories": ["shops-gifts", "coffee-bakery"], "address": "437 Main St", "blurb": "Gift and confectionery boutique on the 400 block: chocolate, candy and small presents.", "hours": "Daily 10 am–5 pm", "url": "https://solaceoflyons.com/", "checked": "Sept 17, 2026" },
-    { "name": "St. Vrain Market", "categories": ["grocery-provisions", "coffee-bakery"], "address": "455 Main St", "blurb": "Deli, bakery and grocery: sandwiches and picnic supplies before the trail, staples after.", "hours": "Daily 8 am–8 pm", "url": "https://stvrainmarket.com/", "checked": "Sept 17, 2026" },
-    { "name": "Honorable Harvest", "categories": ["grocery-provisions", "shops-gifts"], "address": "304-C Main St", "blurb": "Responsibly harvested herbs, teas and apothecary goods.", "hours": "Tue–Sun 10 am–6 pm", "url": "https://www.honorable-harvest.com/", "checked": "Sept 17, 2026" },
-    { "name": "Uniquely Lyons", "categories": ["shops-gifts"], "address": "441 Main St", "blurb": "Lyons-branded gifts, shirts and souvenirs; part of every sale supports the town.", "hours": "Mon–Fri 9 am–5 pm, Sat–Sun 10 am–4 pm", "url": "https://www.uniquelylyons.com/", "checked": "Sept 17, 2026" },
-    { "name": "Gatherings of a Lifetime", "categories": ["shops-gifts"], "address": "447 Main St", "blurb": "Antiques and found treasures, open weekends.", "hours": "Sat–Sun 10 am–4 pm", "checked": "Sept 17, 2026" },
-    { "name": "Western Stars Gallery & Studio", "categories": ["arts-galleries", "shops-gifts"], "address": "160 E Main St", "blurb": "Local art, jewelry, home décor and antiques in a working studio at the east end of Main.", "hours": "Fri–Sat 10 am–5 pm, Sun 10 am–6 pm", "url": "https://westernstarsgallery.com/", "checked": "Sept 17, 2026" },
-    { "name": "South Creek Ltd", "categories": ["outdoor-recreation", "shops-gifts"], "address": "415 Main St", "blurb": "Handmade bamboo fly rods, built in Lyons for the St. Vrain and beyond.", "checked": "Sept 17, 2026" },
-    { "name": "Lyons Classic Pinball", "categories": ["outdoor-recreation", "venues-culture"], "address": "Main St", "blurb": "A pinball hall with dozens of machines, monthly tournaments and a women's league.", "checked": "Sept 17, 2026" },
-    { "name": "WeeCasa Tiny House Resort", "categories": ["stay-the-night"], "address": "501 W Main St", "blurb": "Twenty-plus tiny homes on the St. Vrain, a short walk from Main Street and next door to Planet Bluegrass.", "url": "https://www.weecasa.com/", "checked": "Sept 17, 2026" },
-    { "name": "A-Lodge Lyons", "categories": ["stay-the-night"], "address": "338 W Main St", "blurb": "Adventure lodge on the river at the west edge of town, with the Rock Garden bar on site.", "url": "https://www.a-lodge.com/", "checked": "Sept 17, 2026" },
-    { "name": "Stone Mountain Lodge & Cabins", "categories": ["stay-the-night"], "address": "North St. Vrain Dr (US 36), west of town", "blurb": "Motel rooms and cabins on the road to Estes Park, with a seasonal pool.", "url": "https://www.stonemountainlodge.com/", "checked": "Sept 17, 2026" },
-    { "name": "LaVern M. Johnson Park Campground", "categories": ["stay-the-night", "outdoor-recreation"], "address": "LaVern M. Johnson Park, off Broadway", "blurb": "Town-run riverside camping: RV sites with hookups year-round, tent sites mid-April to mid-October. Reservations through the Town.", "url": "https://www.lyonscolorado.com/311/Parks-and-Recreation", "checked": "Sept 17, 2026" },
-    { "name": "Planet Bluegrass", "categories": ["venues-culture"], "address": "500 W Main St", "blurb": "The 20-acre riverside ranch that hosts RockyGrass and the Rocky Mountain Folks Festival, plus concerts through the year.", "url": "https://bluegrass.com/", "checked": "Sept 17, 2026" },
-    { "name": "Lyons Redstone Museum", "categories": ["venues-culture"], "address": "340 High St", "blurb": "Local history in the 1881 sandstone schoolhouse, run by the Lyons Historical Society. Free; open in the summer season.", "url": "https://www.lyonsredstonemuseum.com/", "checked": "Sept 17, 2026" },
-    { "name": "Lyons Regional Library", "categories": ["venues-culture"], "address": "451 4th Ave", "blurb": "The library district's 2019 building: books, meeting rooms, programs most days and the Effie Banta Room for public meetings.", "url": "https://lyons.colibraries.org/", "checked": "Sept 17, 2026" }
+    {
+      "name": "Oskar Blues Grill & Brew",
+      "categories": [
+        "restaurants-bars",
+        "breweries-distilleries"
+      ],
+      "address": "303 Main St",
+      "blurb": "The original Oskar Blues, open since 1997: Cajun-leaning kitchen, the beers that launched the craft-can movement, and live music most weeks.",
+      "hours": "Sun–Thu 11 am–9 pm, Fri–Sat 11 am–10 pm",
+      "url": "https://lyons.oskarbluesfooderies.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "oskar-blues-grill-brew",
+      "lat": 40.22438,
+      "lng": -105.26856
+    },
+    {
+      "name": "MainStage Brewing Company",
+      "categories": [
+        "breweries-distilleries",
+        "restaurants-bars"
+      ],
+      "address": "450 Main St",
+      "blurb": "Brewery and pizza kitchen with a stage in the name for a reason: trivia, art openings and an open bluegrass pick on the weekly calendar.",
+      "hours": "Tue–Sat 12–10 pm, Sun 12–9 pm",
+      "url": "https://mainstagebrewing.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "mainstage-brewing-company",
+      "lat": 40.22488,
+      "lng": -105.27126
+    },
+    {
+      "name": "Spirit Hound Distillers",
+      "categories": [
+        "breweries-distilleries"
+      ],
+      "address": "4196 Ute Hwy (CO 66)",
+      "blurb": "Grain-to-glass distillery east of town making Colorado straight malt whisky, gin and rum, with a tasting room and a patio.",
+      "hours": "Sun–Tue 11 am–8 pm, Wed–Sat 11 am–9 pm",
+      "url": "https://spirithounds.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "spirit-hound-distillers",
+      "lat": 40.21566,
+      "lng": -105.25605
+    },
+    {
+      "name": "The Rock Garden",
+      "categories": [
+        "breweries-distilleries",
+        "restaurants-bars"
+      ],
+      "address": "338 W Main St (at A-Lodge)",
+      "blurb": "Riverside bar and food garden at the west edge of town: craft beer, local spirits, a Monday open mic and a lot of outdoor seating.",
+      "hours": "Mon & Wed–Thu 3–9 pm, Fri 3–10 pm, Sat–Sun 10 am–10 pm",
+      "url": "https://rockgardenlyons.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "the-rock-garden",
+      "lat": 40.22477,
+      "lng": -105.27143
+    },
+    {
+      "name": "La Mariposa",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "112 E Main St",
+      "blurb": "Classic Mexican kitchen at the east end of Main: molcajetes, margaritas and a patio.",
+      "hours": "Daily 11 am–9 pm",
+      "url": "https://lamariposarestaurants.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "la-mariposa",
+      "lat": 40.22465,
+      "lng": -105.2687
+    },
+    {
+      "name": "Smokin Dave's BBQ & Taphouse",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "228 Main St",
+      "blurb": "Slow-smoked barbecue and a long tap list, mid-block on Main.",
+      "hours": "Daily 11 am–8 pm",
+      "url": "https://smokindavesbbq.com/lyons/",
+      "checked": "Sept 17, 2026",
+      "slug": "smokin-dave-s-bbq-taphouse",
+      "lat": 40.22377,
+      "lng": -105.26621
+    },
+    {
+      "name": "Indian Bites",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "432 Main St",
+      "blurb": "Fresh curries, biryani and saag, for eating in or taking to the park.",
+      "hours": "Mon, Tue & Thu 11 am–8 pm, Wed 4–8 pm, Fri–Sun 11 am–8:30 pm",
+      "url": "https://indianbitesco.com/",
+      "phone": "303-823-0390",
+      "checked": "Sept 17, 2026",
+      "slug": "indian-bites",
+      "lat": 40.2248,
+      "lng": -105.27082
+    },
+    {
+      "name": "Mojo Taqueria",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "216 Main St",
+      "blurb": "Regional Mexican flavors, tacos and a busy bar; dinner most nights, lunch on weekends.",
+      "hours": "Tue–Fri 4–9 pm, Sat–Sun 11 am–9 pm",
+      "url": "https://mojotaqueria.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "mojo-taqueria",
+      "lat": 40.22351,
+      "lng": -105.26566
+    },
+    {
+      "name": "Julie's Thai Kitchen",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "138 Main St",
+      "blurb": "Family-owned Thai kitchen at the east end of Main, dinner only.",
+      "hours": "Tue–Sat 4:30–8:30 pm, Sun 4–8:30 pm",
+      "url": "https://juliesthaikitchen.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "julie-s-thai-kitchen",
+      "lat": 40.2221,
+      "lng": -105.26429
+    },
+    {
+      "name": "Marigold",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "405 Main St, Unit B",
+      "blurb": "Northern Italian and southern French cooking in a small dining room; the town's dinner-out address.",
+      "hours": "Wed–Thu & Sun 5–9 pm, Fri–Sat 5–10 pm",
+      "url": "https://marigoldlyons.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "marigold",
+      "lat": 40.22457,
+      "lng": -105.26949
+    },
+    {
+      "name": "Lyons Locale",
+      "categories": [
+        "restaurants-bars"
+      ],
+      "address": "442 High St",
+      "blurb": "Wine and cocktail lounge a block off Main with paninis, salads, soups and charcuterie boards.",
+      "hours": "Thu 4–9 pm, Fri 4–10 pm, Sat 2–10 pm, Sun 2–7 pm",
+      "url": "https://lyonslocale.com/",
+      "phone": "303-823-6262",
+      "checked": "Sept 17, 2026",
+      "slug": "lyons-locale",
+      "lat": 40.22573,
+      "lng": -105.27125
+    },
+    {
+      "name": "Lyons Dairy Bar",
+      "categories": [
+        "coffee-bakery",
+        "restaurants-bars"
+      ],
+      "address": "138 Main St",
+      "blurb": "Burgers, sandwiches and soft-serve at a walk-up window: the post-tubing stop.",
+      "hours": "Daily 11 am–7 pm",
+      "url": "https://thenewlyonsdairybar.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "lyons-dairy-bar",
+      "lat": 40.2221,
+      "lng": -105.26429
+    },
+    {
+      "name": "Moxie Mercantile",
+      "categories": [
+        "coffee-bakery"
+      ],
+      "address": "442 High St",
+      "blurb": "Moxie Bread Co.'s Lyons outpost: coffee, pastries and loaves from the Louisville bakery.",
+      "hours": "Daily 7 am–4 pm",
+      "url": "https://moxiebreadco.com/moxie-mercantile",
+      "checked": "Sept 17, 2026",
+      "slug": "moxie-mercantile",
+      "lat": 40.22573,
+      "lng": -105.27125
+    },
+    {
+      "name": "MudHut Lyons",
+      "categories": [
+        "coffee-bakery"
+      ],
+      "address": "4033 Ute Hwy (CO 66)",
+      "blurb": "Drive-through coffee on the way into town from Longmont.",
+      "hours": "Daily 7 am–3 pm",
+      "checked": "Sept 17, 2026",
+      "slug": "mudhut-lyons",
+      "lat": 40.21352,
+      "lng": -105.25229
+    },
+    {
+      "name": "Solace",
+      "categories": [
+        "shops-gifts",
+        "coffee-bakery"
+      ],
+      "address": "437 Main St",
+      "blurb": "Gift and confectionery boutique on the 400 block: chocolate, candy and small presents.",
+      "hours": "Daily 10 am–5 pm",
+      "url": "https://solaceoflyons.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "solace",
+      "lat": 40.22458,
+      "lng": -105.27035
+    },
+    {
+      "name": "St. Vrain Market",
+      "categories": [
+        "grocery-provisions",
+        "coffee-bakery"
+      ],
+      "address": "455 Main St",
+      "blurb": "Deli, bakery and grocery: sandwiches and picnic supplies before the trail, staples after.",
+      "hours": "Daily 8 am–8 pm",
+      "url": "https://stvrainmarket.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "st-vrain-market",
+      "lat": 40.22448,
+      "lng": -105.27129
+    },
+    {
+      "name": "Honorable Harvest",
+      "categories": [
+        "grocery-provisions",
+        "shops-gifts"
+      ],
+      "address": "304-C Main St",
+      "blurb": "Responsibly harvested herbs, teas and apothecary goods.",
+      "hours": "Tue–Sun 10 am–6 pm",
+      "url": "https://www.honorable-harvest.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "honorable-harvest",
+      "lat": 40.22306,
+      "lng": -105.26577
+    },
+    {
+      "name": "Uniquely Lyons",
+      "categories": [
+        "shops-gifts"
+      ],
+      "address": "441 Main St",
+      "blurb": "Lyons-branded gifts, shirts and souvenirs; part of every sale supports the town.",
+      "hours": "Mon–Fri 9 am–5 pm, Sat–Sun 10 am–4 pm",
+      "url": "https://www.uniquelylyons.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "uniquely-lyons",
+      "lat": 40.22458,
+      "lng": -105.27043
+    },
+    {
+      "name": "Gatherings of a Lifetime",
+      "categories": [
+        "shops-gifts"
+      ],
+      "address": "447 Main St",
+      "blurb": "Antiques and found treasures, open weekends.",
+      "hours": "Sat–Sun 10 am–4 pm",
+      "checked": "Sept 17, 2026",
+      "slug": "gatherings-of-a-lifetime",
+      "lat": 40.22456,
+      "lng": -105.27094
+    },
+    {
+      "name": "Western Stars Gallery & Studio",
+      "categories": [
+        "arts-galleries",
+        "shops-gifts"
+      ],
+      "address": "160 E Main St",
+      "blurb": "Local art, jewelry, home décor and antiques in a working studio at the east end of Main.",
+      "hours": "Fri–Sat 10 am–5 pm, Sun 10 am–6 pm",
+      "url": "https://westernstarsgallery.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "western-stars-gallery-studio",
+      "lat": 40.22292,
+      "lng": -105.26521
+    },
+    {
+      "name": "South Creek Ltd",
+      "categories": [
+        "outdoor-recreation",
+        "shops-gifts"
+      ],
+      "address": "415 Main St",
+      "blurb": "Handmade bamboo fly rods, built in Lyons for the St. Vrain and beyond.",
+      "checked": "Sept 17, 2026",
+      "slug": "south-creek-ltd",
+      "lat": 40.22457,
+      "lng": -105.26967
+    },
+    {
+      "name": "Lyons Classic Pinball",
+      "categories": [
+        "outdoor-recreation",
+        "venues-culture"
+      ],
+      "address": "Main St",
+      "blurb": "A pinball hall with dozens of machines, monthly tournaments and a women's league.",
+      "checked": "Sept 17, 2026",
+      "slug": "lyons-classic-pinball",
+      "lat": 40.22445,
+      "lng": -105.26891
+    },
+    {
+      "name": "WeeCasa Tiny House Resort",
+      "categories": [
+        "stay-the-night"
+      ],
+      "address": "501 W Main St",
+      "blurb": "Twenty-plus tiny homes on the St. Vrain, a short walk from Main Street and next door to Planet Bluegrass.",
+      "url": "https://www.weecasa.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "weecasa-tiny-house-resort",
+      "lat": 40.22917,
+      "lng": -105.27573
+    },
+    {
+      "name": "A-Lodge Lyons",
+      "categories": [
+        "stay-the-night"
+      ],
+      "address": "338 W Main St",
+      "blurb": "Adventure lodge on the river at the west edge of town, with the Rock Garden bar on site.",
+      "url": "https://www.a-lodge.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "a-lodge-lyons",
+      "lat": 40.22477,
+      "lng": -105.27143
+    },
+    {
+      "name": "Stone Mountain Lodge & Cabins",
+      "categories": [
+        "stay-the-night"
+      ],
+      "address": "North St. Vrain Dr (US 36), west of town",
+      "blurb": "Motel rooms and cabins on the road to Estes Park, with a seasonal pool.",
+      "url": "https://www.stonemountainlodge.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "stone-mountain-lodge-cabins"
+    },
+    {
+      "name": "LaVern M. Johnson Park Campground",
+      "categories": [
+        "stay-the-night",
+        "outdoor-recreation"
+      ],
+      "address": "LaVern M. Johnson Park, off Broadway",
+      "blurb": "Town-run riverside camping: RV sites with hookups year-round, tent sites mid-April to mid-October. Reservations through the Town.",
+      "url": "https://www.lyonscolorado.com/311/Parks-and-Recreation",
+      "checked": "Sept 17, 2026",
+      "slug": "lavern-m-johnson-park-campground",
+      "lat": 40.2239,
+      "lng": -105.2751
+    },
+    {
+      "name": "Planet Bluegrass",
+      "categories": [
+        "venues-culture"
+      ],
+      "address": "500 W Main St",
+      "blurb": "The 20-acre riverside ranch that hosts RockyGrass and the Rocky Mountain Folks Festival, plus concerts through the year.",
+      "url": "https://bluegrass.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "planet-bluegrass",
+      "lat": 40.22918,
+      "lng": -105.27574
+    },
+    {
+      "name": "Lyons Redstone Museum",
+      "categories": [
+        "venues-culture"
+      ],
+      "address": "340 High St",
+      "blurb": "Local history in the 1881 sandstone schoolhouse, run by the Lyons Historical Society. Free; open in the summer season.",
+      "url": "https://www.lyonsredstonemuseum.com/",
+      "checked": "Sept 17, 2026",
+      "slug": "lyons-redstone-museum",
+      "lat": 40.22537,
+      "lng": -105.26847
+    },
+    {
+      "name": "Lyons Regional Library",
+      "categories": [
+        "venues-culture"
+      ],
+      "address": "451 4th Ave",
+      "blurb": "The library district's 2019 building: books, meeting rooms, programs most days and the Effie Banta Room for public meetings.",
+      "url": "https://lyons.colibraries.org/",
+      "checked": "Sept 17, 2026",
+      "slug": "lyons-regional-library",
+      "lat": 40.22377,
+      "lng": -105.27028
+    }
   ]
 }

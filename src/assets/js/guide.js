@@ -1,5 +1,10 @@
 // Explore Lyons — page behaviours. No dependencies.
 (function () {
+  var shown = {}; // event id+date already placed in the weekend module
+
+  function isoOf(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  function fmtShort(iso) { var d = new Date(iso + 'T12:00:00'); return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }); }
+
   // Mobile navigation. Every path that changes the menu goes through setOpen,
   // so the expanded state and the accessible name can never disagree.
   function nav() {
@@ -19,21 +24,87 @@
     });
   }
 
-  // Upcoming lists are rendered at build time; past entries leave on their own.
-  function upcoming() {
+  // "This weekend": the coming Friday to Sunday (or the rest of this one).
+  // The list is rendered at build time with the next few weeks of events;
+  // this narrows it to the window and rewrites the heading. With nothing in
+  // the window it falls back to the next three dated events.
+  function weekend() {
+    var list = document.querySelector('[data-weekend]');
+    if (!list) return;
     var today = new Date();
-    var iso = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+    var dow = today.getDay();
+    var start = new Date(today);
+    if (dow >= 1 && dow <= 4) start.setDate(today.getDate() + (5 - dow));
+    var end = new Date(start);
+    end.setDate(start.getDate() + (start.getDay() === 0 ? 0 : 7 - start.getDay()));
+    var s = isoOf(start), e = isoOf(end), t = isoOf(today);
+    var cards = Array.prototype.slice.call(list.querySelectorAll('[data-event-date]'));
+    var inWindow = cards.filter(function (c) { var d = c.getAttribute('data-event-date'); return d >= s && d <= e && d >= t; });
+    var pick = inWindow.length ? inWindow.slice(0, 6) : cards.filter(function (c) { return c.getAttribute('data-event-date') >= t; }).slice(0, 3);
+    cards.forEach(function (c) { c.hidden = pick.indexOf(c) === -1; });
+    pick.forEach(function (c) { shown[c.getAttribute('data-event-id') + '|' + c.getAttribute('data-event-date')] = true; });
+    var h = document.querySelector('[data-weekend-heading]');
+    var sub = document.querySelector('[data-weekend-sub]');
+    if (h) h.textContent = inWindow.length ? 'This weekend in Lyons' : 'Coming up in Lyons';
+    if (sub) sub.textContent = inWindow.length ? (fmtShort(s) + (s === e ? '' : ' to ' + fmtShort(e))) : 'The next dated events on the calendar';
+    var empty = list.parentElement.querySelector('[data-weekend-empty]');
+    if (empty) empty.hidden = pick.length > 0;
+  }
+
+  // Upcoming lists are rendered at build time; past entries leave on their
+  // own, and anything already shown in the weekend module is skipped.
+  function upcoming() {
+    var iso = isoOf(new Date());
     document.querySelectorAll('[data-upcoming]').forEach(function (list) {
       var limit = parseInt(list.getAttribute('data-limit') || '0', 10);
-      var shown = 0;
+      var count = 0;
       list.querySelectorAll('[data-event-date]').forEach(function (el) {
         var past = el.getAttribute('data-event-date') < iso;
-        var over = limit && shown >= limit;
-        el.hidden = past || over;
-        if (!el.hidden) shown++;
+        var dup = list.hasAttribute('data-skip-shown') && shown[el.getAttribute('data-event-id') + '|' + el.getAttribute('data-event-date')];
+        var over = limit && count >= limit;
+        el.hidden = past || dup || over;
+        if (!el.hidden) count++;
       });
       var empty = list.parentElement.querySelector('[data-upcoming-empty]');
-      if (empty) empty.hidden = shown > 0;
+      if (empty) empty.hidden = count > 0;
+    });
+  }
+
+  // River gauge: Colorado DWR station SVCLYOCO, "Saint Vrain Creek at Lyons",
+  // 15-minute readings. The reading is turned into a plain sentence using the
+  // rule-of-thumb levels on the river page. If the request fails the element
+  // keeps its static text, which links to the gauge itself.
+  function gauge() {
+    var els = document.querySelectorAll('[data-gauge]');
+    if (!els.length || !window.fetch) return;
+    var since = new Date(); since.setDate(since.getDate() - 2);
+    var mmddyyyy = String(since.getMonth() + 1).padStart(2, '0') + '/' + String(since.getDate()).padStart(2, '0') + '/' + since.getFullYear();
+    var url = 'https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesraw/?format=json&abbrev=SVCLYOCO&parameter=DISCHRG&startDate=' + encodeURIComponent(mmddyyyy);
+    function reading(cfs) {
+      if (cfs < 40) return { word: 'Low', note: 'Too shallow for tubes; fine for wading, fishing and the whitewater-park rocks.' };
+      if (cfs < 100) return { word: 'Mellow', note: 'Easy tubing through LaVern M. Johnson Park; kids’ water with a life jacket.' };
+      if (cfs < 300) return { word: 'Prime', note: 'The classic tubing level from the Apple Valley bridge down through town.' };
+      if (cfs < 700) return { word: 'Fast', note: 'Quick and pushy: life jackets, experienced floaters, no first-timers.' };
+      if (cfs < 1200) return { word: 'High', note: 'Not for tubes. Kayakers and rafters only; the park features wash out.' };
+      return { word: 'Flood stage', note: 'Stay off the water and away from the banks; the Town posts advisories.' };
+    }
+    fetch(url).then(function (r) { return r.json(); }).then(function (d) {
+      var rows = (d && d.ResultList) || [];
+      if (!rows.length) throw new Error('no data');
+      var last = rows[rows.length - 1];
+      var cfs = Number(last.measValue);
+      var when = new Date(last.measDateTime);
+      var r = reading(cfs);
+      els.forEach(function (el) {
+        var v = el.querySelector('[data-gauge-value]'); if (v) v.textContent = Math.round(cfs).toLocaleString('en-US') + ' cfs';
+        var w = el.querySelector('[data-gauge-word]'); if (w) w.textContent = r.word;
+        var n = el.querySelector('[data-gauge-note]'); if (n) n.textContent = r.note;
+        var t = el.querySelector('[data-gauge-time]'); if (t) t.textContent = 'Read ' + when.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' at the Lyons gauge';
+        el.setAttribute('data-gauge-level', r.word.toLowerCase().replace(' ', '-'));
+        el.classList.add('l-gauge--live');
+      });
+    }).catch(function () {
+      els.forEach(function (el) { el.classList.add('l-gauge--offline'); });
     });
   }
 
@@ -71,7 +142,7 @@
     });
   }
 
-  function init() { nav(); upcoming(); contact(); }
+  function init() { nav(); weekend(); upcoming(); gauge(); contact(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

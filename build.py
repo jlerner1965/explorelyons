@@ -30,12 +30,12 @@ REVIEWED = TODAY.strftime("%B %Y")
 
 NAV = [
     ("explore", "/explore/", "Explore"),
-    ("eat-shop", "/eat-shop/", "Eat &amp; Shop"),
+    ("eat-shop", "/eat-shop/", "Eat &amp; Drink"),
+    ("stay", "/stay/", "Stay"),
+    ("outdoors", "/outdoors/", "Trails &amp; River"),
     ("events", "/events/", "Events"),
     ("plan-a-visit", "/plan-a-visit/", "Plan a Visit"),
-    ("community", "/community/", "Community"),
-    ("our-story", "/our-story/", "Our Story"),
-    ("civic", "/civic/", "Civic Information"),
+    ("live-here", "/community/", "Live here"),
 ]
 
 PHOTO_WIDTHS = [400, 560, 700, 1000, 1400]
@@ -208,12 +208,13 @@ def render_directory(data):
                 host = re.sub(r"^https?://(www\.)?", "", l["url"]).rstrip("/")
                 site = f'<a class="l-link" href="{html.escape(l["url"])}" rel="noopener" style="white-space:nowrap;font-size:.875rem">{html.escape(host)} <span aria-hidden="true">&#8599;</span></a>'
             phone = f' &#183; <a href="tel:{re.sub(r"[^0-9+]", "", l["phone"])}" style="color:inherit">{html.escape(l["phone"])}</a>' if l.get("phone") else ""
+            pin = f'<a class="l-link" href="#map" data-pin="{l["slug"]}" style="white-space:nowrap;font-size:.875rem">On the map <span aria-hidden="true">&#8595;</span></a>' if l.get("lat") else ""
             rows.append(
-                f'<article class="l-dir-row" data-dir-row data-cats="{" ".join(l["categories"])}" data-search="{html.escape(search, quote=True)}">'
+                f'<article class="l-dir-row" data-dir-row data-slug="{l["slug"]}" data-cats="{" ".join(l["categories"])}" data-search="{html.escape(search, quote=True)}">'
                 f'<div><h3>{html.escape(l["name"])}</h3>'
                 f'<p class="l-body" style="margin:6px 0 0;font-size:.9375rem;max-width:62ch">{html.escape(l.get("blurb", ""))}</p>'
                 f'<div class="l-tags"><span>{tags}</span></div></div>'
-                f'<div style="text-align:right">{site}</div>'
+                f'<div style="text-align:right;display:grid;gap:8px;justify-items:end">{site}{pin}</div>'
                 f'<div class="l-meta">{html.escape(l.get("address", ""))}{phone}'
                 f'{" &#183; " + html.escape(l["hours"]) if l.get("hours") else ""}'
                 f' &#183; Checked {html.escape(l.get("checked", ""))}</div>'
@@ -231,6 +232,51 @@ def render_directory(data):
         "groups": "".join(groups),
         "count": str(len(listings)),
     }
+
+
+def render_stay(data):
+    cards = []
+    for l in data["listings"]:
+        if "stay-the-night" not in l["categories"]:
+            continue
+        site = ""
+        if l.get("url"):
+            host = re.sub(r"^https?://(www\.)?", "", l["url"]).rstrip("/")
+            site = f'<a class="l-link" href="{html.escape(l["url"])}" rel="noopener">{html.escape(host)} <span aria-hidden="true">&#8599;</span></a>'
+        pin = f'<a class="l-link" href="#map" data-pin="{l["slug"]}">On the map <span aria-hidden="true">&#8595;</span></a>' if l.get("lat") else ""
+        cards.append(
+            f'<article class="l-stay-card"><h3 class="l-h3">{html.escape(l["name"])}</h3>'
+            f'<div class="l-label l-label--quiet" style="margin-top:6px">{html.escape(l.get("address", ""))}</div>'
+            f'<p class="l-body" style="margin:10px 0 0;font-size:.9375rem">{html.escape(l.get("blurb", ""))}</p>'
+            f'<div style="display:flex;flex-wrap:wrap;gap:8px 20px;margin-top:12px">{site}{pin}</div>'
+            f'<div class="l-small" style="margin-top:8px;font-size:.8125rem">Checked {html.escape(l.get("checked", ""))}</div></article>'
+        )
+    return "".join(cards)
+
+
+def build_pins(biz, places):
+    pins = []
+    for l in biz["listings"]:
+        if not l.get("lat"):
+            continue
+        cat = l["categories"][0]
+        kind = "stay" if "stay-the-night" in l["categories"] else ("culture" if cat == "venues-culture" else ("outdoor" if cat == "outdoor-recreation" else ("shop" if cat in ("shops-gifts", "arts-galleries", "grocery-provisions") else "eat")))
+        pins.append({"id": l["slug"], "name": l["name"], "kind": kind, "lat": l["lat"], "lng": l["lng"], "addr": l.get("address", ""), "url": l.get("url"), "cats": l["categories"]})
+    for pl in places["places"]:
+        pins.append({"id": pl["id"], "name": pl["name"], "kind": pl["kind"], "lat": pl["lat"], "lng": pl["lng"], "addr": "", "url": pl.get("url"), "href": pl.get("href"), "blurb": pl.get("blurb", "")})
+    return pins
+
+
+def pins_for(pins, which):
+    if which == "all":
+        return pins
+    if which == "eat":
+        return [p for p in pins if p["kind"] in ("eat", "shop", "culture", "outdoor", "stay") or p["id"] in ("main-street", "sandstone-park", "lavern-park", "bohn-park", "library", "town-hall", "west-junction", "east-junction")]
+    if which == "stay":
+        return [p for p in pins if p["kind"] == "stay" or p["id"] in ("main-street", "lavern-park", "bohn-park", "planet-bluegrass", "sandstone-park", "west-junction", "east-junction")]
+    if which == "outdoors":
+        return [p for p in pins if p["kind"] in ("park", "trail") or p["id"] in ("main-street", "apple-valley-bridge", "river-gauge", "west-junction", "east-junction", "st-vrain-trailhead")]
+    return pins
 
 
 # --------------------------------------------------------------- pages ----
@@ -254,13 +300,31 @@ def jsonld(meta):
         "@type": "WebSite",
         "name": "ExploreLyons.com",
         "url": SITE + "/",
-        "description": "An independent community guide to Lyons, Colorado.",
+        "description": "An independent guide to things to do in Lyons, Colorado.",
     }, {
         "@type": "WebPage",
         "name": meta["title"],
         "url": SITE + meta["path"],
         "description": meta["description"],
     }]
+    if meta["path"] == "/":
+        graph.append({
+            "@type": "TouristDestination",
+            "name": "Lyons, Colorado",
+            "url": SITE + "/",
+            "description": "A sandstone town at the confluence of the North and South St. Vrain, twenty minutes north of Boulder: Main Street, the whitewater park, Hall Ranch and Planet Bluegrass.",
+            "touristType": ["hikers", "mountain bikers", "families", "music fans", "anglers"],
+            "geo": {"@type": "GeoCoordinates", "latitude": 40.2247, "longitude": -105.2714},
+            "includesAttraction": [
+                {"@type": "TouristAttraction", "name": n, "url": SITE + u} for n, u in (
+                    ("Main Street historic district", "/explore/#mainstreet"),
+                    ("LaVern M. Johnson Park and the whitewater park", "/outdoors/#river"),
+                    ("Hall Ranch", "/outdoors/#trails"),
+                    ("Planet Bluegrass", "/explore/#music"),
+                    ("Lyons Redstone Museum", "/explore/#art"),
+                )
+            ],
+        })
     if meta["path"] != "/":
         graph.append({
             "@type": "BreadcrumbList",
@@ -284,7 +348,11 @@ def build():
     layout = read(os.path.join(SRC, "layout.html"))
     events = load_json("events.json")
     occ = expand_events(events)
-    directory = render_directory(load_json("businesses.json"))
+    biz = load_json("businesses.json")
+    places = load_json("places.json")
+    directory = render_directory(biz)
+    stay_cards = render_stay(biz)
+    pins = build_pins(biz, places)
     upcoming_json = json.dumps([
         {k: o.get(k) for k in ("id", "title", "date", "time", "venue", "address", "organizer", "cost", "detail", "url")}
         for o in occ if o["date"] >= TODAY.isoformat()
@@ -302,6 +370,9 @@ def build():
         meta = json.loads(m.group(1))
         body = raw[m.end():]
         body = body.replace("{{upcoming_home}}", render_upcoming(occ, 3, "link"))
+        body = body.replace("{{weekend_list}}", render_upcoming(occ, 6, "link"))
+        body = body.replace("{{stay_cards}}", stay_cards)
+        body = re.sub(r"\{\{pins:(\w+)\}\}", lambda m: json.dumps(pins_for(pins, m.group(1)), ensure_ascii=False).replace("</", "<\\/"), body)
         body = body.replace("{{upcoming_list}}", render_upcoming(occ, 10, "jump"))
         body = body.replace("{{events_json}}", upcoming_json.replace("</", "<\\/"))
         for k, v in directory.items():
