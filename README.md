@@ -61,8 +61,24 @@ JSON meta block, then its body. Photographs are placed with
   periodically so the calendar horizon rolls forward.
 - **The month module**: `src/data/now.json` has one entry per month; the build writes the current month and the browser re-picks by its own date.
 - **An itinerary**: add an object to `src/data/itineraries.json` (steps, tips, months); it renders on `/itineraries/` and as a card.
-- **A photo**: drop a JPEG into a folder and run `node tools/images.mjs <folder>`
-  (needs `npm i sharp`), then credit it on `/privacy/#photos`.
+- **A photo**: put the original in `photos-new/` and run
+  `node tools/images.mjs photos-new` (needs `npm i sharp`), then credit it on
+  `/privacy/#photos`. `photos-new/README.md` has the naming and credit rules.
+
+### The calendar feed
+
+`build.py` writes `public/events.ics`, a subscribable iCalendar feed linked from
+`/events/#subscribe` and from the footer. One-off events become single VEVENTs;
+the `series` entries become recurring ones (`FREQ=WEEKLY` or, for the
+first/third-Monday fixtures, `FREQ=MONTHLY;BYDAY=1MO,3MO`), so a subscriber's
+calendar keeps filling in between rebuilds rather than stopping at the site's
+horizon. `skip` dates become `EXDATE`s.
+
+Times are parsed from the human strings in `events.json` (`"5–8 pm"`,
+`"7 am–1 pm"`, `"6:30–8:30 pm"`). A start with no published end gets an hour and
+says so in the description; anything unparseable goes in as all-day rather than
+at a guessed hour. The feed carries a `VTIMEZONE` for `America/Denver`, so a
+7 pm meeting stays at 7 pm across the daylight-saving change.
 
 ### Live data and the map
 

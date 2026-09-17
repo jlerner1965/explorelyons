@@ -27,6 +27,7 @@ OUT = os.path.join(ROOT, "public")
 SITE = "https://explorelyons.com"
 TODAY = dt.date.today()
 REVIEWED = TODAY.strftime("%B %Y")
+ICS_STAMP = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
 NAV = [
     ("explore", "/explore/", "Explore"),
@@ -418,6 +419,196 @@ def faq_ld(body):
 
 # --------------------------------------------------------------- pages ----
 
+# ------------------------------------------------------------ calendar ----
+# A subscribable feed at /events.ics. One-off events become single VEVENTs;
+# the weekly and monthly series become recurring ones, so the feed keeps
+# working between rebuilds instead of running out at the site's horizon.
+
+CLOCK_RE = re.compile(r"^\s*(\d{1,2})(?::(\d{2}))?\s*(am|pm)?\s*$", re.I)
+ICS_DAYS = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"]
+SERIES_ANCHOR = TODAY  # recurrence starts at the next occurrence, not in the past
+
+
+def parse_clock(part, fallback_meridiem=None):
+    m = CLOCK_RE.match(part)
+    if not m:
+        return None
+    h, mins = int(m.group(1)), int(m.group(2) or 0)
+    mer = (m.group(3) or fallback_meridiem or "").lower()
+    if not mer or not (1 <= h <= 12):
+        return None
+    if mer == "pm" and h != 12:
+        h += 12
+    if mer == "am" and h == 12:
+        h = 0
+    return h * 60 + mins
+
+
+def parse_time(s):
+    """'5-8 pm' -> (1020, 1200) in minutes past midnight. A single time gives
+    (start, None); anything unparseable gives None, and the event goes in as
+    all-day rather than at a guessed hour."""
+    if not s:
+        return None
+    s = s.replace("\u2013", "-").replace("\u2014", "-")
+    if "-" not in s:
+        start = parse_clock(s)
+        return (start, None) if start is not None else None
+    left, right = s.split("-", 1)
+    end = parse_clock(right)
+    if end is None:
+        return None
+    start = parse_clock(left)
+    if start is None:
+        # "5-8 pm": the left side borrows the right side's am/pm, unless that
+        # would put the start after the end ("11-1 pm").
+        mer = "pm" if end >= 12 * 60 else "am"
+        start = parse_clock(left, mer)
+        if start is not None and start >= end:
+            alt = parse_clock(left, "am" if mer == "pm" else "pm")
+            if alt is not None and alt < end:
+                start = alt
+    if start is None:
+        return None
+    return (start, end)
+
+
+def ics_escape(s):
+    return (str(s).replace("\\", "\\\\").replace(";", "\;")
+            .replace(",", "\\,").replace("\r\n", "\\n").replace("\n", "\\n"))
+
+
+def ics_fold(line):
+    """RFC 5545 caps a content line at 75 octets; the rest continues on the
+    next line behind a single space. Fold on octets, not characters, so
+    multi-byte text is never cut in half."""
+    raw = line.encode("utf-8")
+    if len(raw) <= 75:
+        return line
+    parts, first = [], True
+    while raw:
+        cut = min(75 if first else 74, len(raw))  # continuations carry a space
+        while 0 < cut < len(raw) and (raw[cut] & 0xC0) == 0x80:
+            cut -= 1
+        parts.append(raw[:cut].decode("utf-8"))
+        raw, first = raw[cut:], False
+    return "\r\n ".join(parts)
+
+
+def ics_dt(date_str, minutes):
+    d = dt.date.fromisoformat(date_str)
+    return f"{d.strftime('%Y%m%d')}T{minutes // 60:02d}{minutes % 60:02d}00"
+
+
+def ics_event(ev, date_str, uid, rrule=None, exdates=()):
+    times = parse_time(ev.get("time"))
+    lines = [
+        "BEGIN:VEVENT",
+        f"UID:{uid}",
+        f"DTSTAMP:{ICS_STAMP}",
+        f"SUMMARY:{ics_escape(ev['title'])}",
+    ]
+    if times:
+        start, end = times
+        lines.append(f"DTSTART;TZID=America/Denver:{ics_dt(date_str, start)}")
+        # No published end time: an hour keeps the entry visible in clients
+        # that need a duration, and the listed time goes in the description.
+        lines.append(f"DTEND;TZID=America/Denver:{ics_dt(date_str, end if end is not None else min(start + 60, 24 * 60 - 1))}")
+    else:
+        d = dt.date.fromisoformat(date_str)
+        lines.append(f"DTSTART;VALUE=DATE:{d.strftime('%Y%m%d')}")
+        lines.append(f"DTEND;VALUE=DATE:{(d + dt.timedelta(days=1)).strftime('%Y%m%d')}")
+    if rrule:
+        lines.append(f"RRULE:{rrule}")
+    for x in exdates:
+        if times:
+            lines.append(f"EXDATE;TZID=America/Denver:{ics_dt(x, times[0])}")
+        else:
+            lines.append(f"EXDATE;VALUE=DATE:{dt.date.fromisoformat(x).strftime('%Y%m%d')}")
+    where = " \u00b7 ".join(x for x in [ev.get("venue"), ev.get("address")] if x)
+    if where:
+        lines.append(f"LOCATION:{ics_escape(where + ', Lyons, CO 80540')}")
+    desc = [x for x in [ev.get("detail")] if x]
+    if ev.get("time") and not times:
+        desc.append(f"Listed time: {ev['time']}.")
+    elif ev.get("time") and times and times[1] is None:
+        desc.append(f"Listed time: {ev['time']} (no end time published).")
+    meta = " \u00b7 ".join(x for x in [ev.get("organizer"), ev.get("cost")] if x)
+    if meta:
+        desc.append(meta)
+    if ev.get("url"):
+        desc.append(ev["url"])
+        lines.append(f"URL:{ics_escape(ev['url'])}")
+    desc.append(f"Listing: {SITE}/events/")
+    lines.append(f"DESCRIPTION:{ics_escape(chr(10).join(desc))}")
+    lines.append("END:VEVENT")
+    return lines
+
+
+def ics_feed(data):
+    body = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//ExploreLyons.com//Lyons Colorado events//EN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "X-WR-CALNAME:Lyons\\, Colorado events",
+        "X-WR-CALDESC:Events in Lyons\\, Colorado\\, from ExploreLyons.com. Times come from the organizer; check their page before setting out.",
+        "X-WR-TIMEZONE:America/Denver",
+        "REFRESH-INTERVAL;VALUE=DURATION:PT12H",
+        "X-PUBLISHED-TTL:PT12H",
+        # US rules since 2007: second Sunday in March, first Sunday in November.
+        "BEGIN:VTIMEZONE",
+        "TZID:America/Denver",
+        "X-LIC-LOCATION:America/Denver",
+        "BEGIN:DAYLIGHT",
+        "TZOFFSETFROM:-0700",
+        "TZOFFSETTO:-0600",
+        "TZNAME:MDT",
+        "DTSTART:20070311T020000",
+        "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU",
+        "END:DAYLIGHT",
+        "BEGIN:STANDARD",
+        "TZOFFSETFROM:-0600",
+        "TZOFFSETTO:-0700",
+        "TZNAME:MST",
+        "DTSTART:20071104T020000",
+        "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU",
+        "END:STANDARD",
+        "END:VTIMEZONE",
+    ]
+    count = 0
+    for ev in data["events"]:
+        start = dt.date.fromisoformat(ev["date"])
+        end = dt.date.fromisoformat(ev.get("end", ev["date"]))
+        day = start
+        while day <= end:
+            # Most ids already carry their date; only a multi-day event needs one.
+            uid = ev["id"] if start == end else f"{ev['id']}-{day.isoformat()}"
+            body += ics_event(ev, day.isoformat(), f"{uid}@explorelyons.com")
+            count += 1
+            day += dt.timedelta(days=1)
+    for s in data.get("series", []):
+        # First occurrence on or after the anchor, so the rule has a real start.
+        day = SERIES_ANCHOR
+        for _ in range(400):
+            if day.weekday() == s["weekday"]:
+                nth = (day.day - 1) // 7 + 1
+                if "weeks" not in s or nth in s["weeks"]:
+                    break
+            day += dt.timedelta(days=1)
+        else:
+            continue
+        dow = ICS_DAYS[s["weekday"]]
+        rule = (f"FREQ=MONTHLY;BYDAY={','.join(str(n) + dow for n in s['weeks'])}"
+                if "weeks" in s else f"FREQ=WEEKLY;BYDAY={dow}")
+        skips = [x for x in s.get("skip", []) if dt.date.fromisoformat(x) >= day]
+        body += ics_event(s, day.isoformat(), f"{s['id']}@explorelyons.com", rrule=rule, exdates=skips)
+        count += 1
+    body.append("END:VCALENDAR")
+    return "\r\n".join(ics_fold(l) for l in body) + "\r\n", count
+
+
 META_RE = re.compile(r"^<!--meta\s*(\{.*?\})\s*-->\s*", re.S)
 
 
@@ -562,11 +753,15 @@ def build():
     shutil.copy(os.path.join(OUT, "404", "index.html"), os.path.join(OUT, "404.html"))
     shutil.rmtree(os.path.join(OUT, "404"))
 
+    ics, ics_count = ics_feed(events)
+    write(os.path.join(OUT, "events.ics"), ics)
+
     write(os.path.join(OUT, "sitemap.xml"),
           '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
           + "".join(f"  <url><loc>{SITE}{u}</loc><lastmod>{TODAY.isoformat()}</lastmod></url>\n" for u in urls)
           + "</urlset>\n")
-    print(f"built {len(urls)} pages into public/ ({len(occ)} event occurrences, reviewed {REVIEWED})")
+    print(f"built {len(urls)} pages into public/ ({len(occ)} event occurrences, "
+          f"{ics_count} calendar entries, reviewed {REVIEWED})")
 
 
 if __name__ == "__main__":
