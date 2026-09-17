@@ -1,12 +1,12 @@
 <!--meta
 {
-  "title": "Lyons, Colorado Restaurants, Breweries, Shops & Lodging | ExploreLyons.com",
+  "title": "Eat, Drink & Shop in Lyons, Colorado: Restaurants, Breweries, Coffee, Galleries | ExploreLyons.com",
   "description": "A verified directory of Lyons, Colorado businesses: restaurants, Oskar Blues and MainStage, Spirit Hound, coffee, galleries, gift shops, outdoor gear, tiny-home and lodge stays, and the museum and library, each with a link and the date it was checked.",
   "path": "/eat-shop/",
   "nav": "eat-shop",
   "crumb": "Eat & Shop",
   "og_image": "downtown",
-  "head_extra": "<script src=\"/assets/js/directory.js\" defer></script>"
+  "head_extra": "<script src=\"/assets/js/directory.js\" defer></script><script src=\"/assets/js/map.js\" defer></script>"
 }
 -->
 <section class="l-bg-white" aria-labelledby="title-h">
@@ -14,13 +14,13 @@
 <div class="l-g2-wide" style="align-items:end">
 <div>
 <div class="l-label">Eat &amp; shop locally</div>
-<h1 class="l-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,2rem + 2.2vw,4.5rem);line-height:.96;max-width:12ch;color:var(--l-evergreen)">Lyons Restaurants, Shops &amp; Places to Stay</h1>
+<h1 class="l-display" id="title-h" style="margin-top:14px;font-size:clamp(2.5rem,2rem + 2.2vw,4.5rem);line-height:.96;max-width:12ch;color:var(--l-evergreen)">Eat, Drink &amp; Shop in Lyons</h1>
 <p class="l-lead" style="margin:clamp(20px,2.5vw,32px) 0 0;max-width:46ch">Kitchens, taprooms, coffee, galleries, gear and beds, nearly all of them on six blocks of Main Street and almost all locally owned.</p>
 <nav aria-label="Popular directory categories" style="display:grid;gap:0;margin-top:22px;max-width:420px">
 <a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=restaurants-bars"><span><span>Restaurants &amp; bars</span></span><span aria-hidden="true">&#8594;</span></a>
 <a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=breweries-distilleries"><span><span>Breweries, distilleries &amp; taprooms</span></span><span aria-hidden="true">&#8594;</span></a>
 <a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=shops-gifts"><span><span>Shops &amp; gifts</span></span><span aria-hidden="true">&#8594;</span></a>
-<a class="l-row-link l-shift l-shift--sm" href="/eat-shop/?category=stay-the-night"><span><span>Stay the night</span></span><span aria-hidden="true">&#8594;</span></a>
+<a class="l-row-link l-shift l-shift--sm" href="/stay/"><span><span>Stay the night</span></span><span aria-hidden="true">&#8594;</span></a>
 </nav>
 </div>
 <figure class="l-photo-natural" style="margin:0">
@@ -75,6 +75,22 @@
 </div>
 </div>
 </div>
+</div>
+</section>
+
+<section class="l-bg-white l-pad-sm" id="map" aria-labelledby="map-h" style="border-top:1px solid var(--l-rule)">
+<div class="l-wrap">
+<div class="l-shead l-shead-row">
+<div><div class="l-label">Where they are</div><h2 class="l-h2" id="map-h" style="margin-top:12px;color:var(--l-redrock)">The map</h2></div>
+<span class="l-small" style="max-width:48ch;color:var(--l-ink)">Every listing with a street address, plus the parks and the two junctions. Pick a pin for the website and directions.</span>
+</div>
+<div class="l-map" data-map style="margin-top:20px">
+<div class="l-btns" style="align-items:center"><button type="button" class="l-btn l-btn--ghost" data-map-open>Show the map</button><span class="l-small" style="max-width:52ch">Opening the map loads tiles from OpenStreetMap; nothing is requested until you do. <a href="/privacy/#map">How that works</a>.</span></div>
+<div class="l-map-canvas" data-map-canvas hidden></div>
+<div class="l-map-legend" data-map-legend></div>
+<p class="l-small" data-map-fallback hidden style="margin:10px 0 0">The map could not load. <a href="https://www.openstreetmap.org/#map=16/40.2244/-105.2705" rel="noopener">Open the area on OpenStreetMap <span aria-hidden="true">&#8599;</span></a></p>
+</div>
+<script type="application/json" data-map-pins>{{pins:eat}}</script>
 </div>
 </section>
 

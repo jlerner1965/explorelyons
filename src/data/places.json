@@ -1,0 +1,182 @@
+{
+  "note": "Coordinates from OpenStreetMap (Nominatim) and the DWR station record; approximate to the block. Kinds: park, trail, landmark. Business pins come from businesses.json.",
+  "places": [
+    {
+      "id": "main-street",
+      "name": "Main Street",
+      "kind": "landmark",
+      "lat": 40.22443,
+      "lng": -105.27053,
+      "blurb": "Six blocks of sandstone storefronts between the two highway junctions.",
+      "href": "/explore/#mainstreet"
+    },
+    {
+      "id": "sandstone-park",
+      "name": "Sandstone Park & the visitor center",
+      "kind": "park",
+      "lat": 40.22375,
+      "lng": -105.2687,
+      "blurb": "The downtown green at 4th and Broadway: visitor center, concert lawn, the Depot.",
+      "href": "/explore/#river"
+    },
+    {
+      "id": "lavern-park",
+      "name": "LaVern M. Johnson Park",
+      "kind": "park",
+      "lat": 40.2239,
+      "lng": -105.2751,
+      "blurb": "The whitewater park, splash pad, campground and winter ice rink, under the cliffs off Broadway.",
+      "href": "/outdoors/#river"
+    },
+    {
+      "id": "bohn-park",
+      "name": "Bohn Park",
+      "kind": "park",
+      "lat": 40.21757,
+      "lng": -105.26754,
+      "blurb": "Ball fields, the dog park, an accessible fishing platform, the bike park and the river trail.",
+      "href": "/outdoors/#river"
+    },
+    {
+      "id": "st-vrain-trailhead",
+      "name": "St. Vrain Trailhead (2nd Ave)",
+      "kind": "trail",
+      "lat": 40.21823,
+      "lng": -105.26472,
+      "blurb": "Trail access on the south bank and dry campervan parking in season.",
+      "href": "/outdoors/#trails"
+    },
+    {
+      "id": "hall-ranch",
+      "name": "Hall Ranch (Bitterbrush trailhead)",
+      "kind": "trail",
+      "lat": 40.21179,
+      "lng": -105.28873,
+      "blurb": "Boulder County open space: 13.6 miles of trail, the Bitterbrush climb and the Nelson Loop. No dogs.",
+      "href": "/outdoors/#trails",
+      "url": "https://bouldercounty.gov/open-space/parks-and-trails/hall-ranch/"
+    },
+    {
+      "id": "heil-valley",
+      "name": "Heil Valley Ranch",
+      "kind": "trail",
+      "lat": 40.14941,
+      "lng": -105.30013,
+      "blurb": "19 miles of trail south of town; the Picture Rock trail links it to Lyons. No dogs, no e-bikes.",
+      "href": "/outdoors/#trails",
+      "url": "https://bouldercounty.gov/open-space/parks-and-trails/heil-valley-ranch/"
+    },
+    {
+      "id": "rabbit-mountain",
+      "name": "Ron Stewart Preserve at Rabbit Mountain",
+      "kind": "trail",
+      "lat": 40.24026,
+      "lng": -105.20136,
+      "blurb": "The dry, early-season hike north-east of town; leashed dogs welcome.",
+      "href": "/outdoors/#trails",
+      "url": "https://bouldercounty.gov/open-space/parks-and-trails/ron-stewart-preserve-rabbit-mountain/"
+    },
+    {
+      "id": "button-rock",
+      "name": "Button Rock Preserve",
+      "kind": "trail",
+      "lat": 40.22023,
+      "lng": -105.37982,
+      "blurb": "Longmont's watershed preserve up County Road 80: the Sleepy Lion trail and the walk to the dam. Foot travel only, no dogs.",
+      "href": "/outdoors/#trails",
+      "url": "https://longmontcolorado.gov/facility/button-rock-preserve/"
+    },
+    {
+      "id": "apple-valley-bridge",
+      "name": "Apple Valley Road bridge",
+      "kind": "landmark",
+      "lat": 40.2312,
+      "lng": -105.2803,
+      "blurb": "The wooden arch over the North St. Vrain, a tubing put-in when the water is right.",
+      "href": "/outdoors/#river"
+    },
+    {
+      "id": "river-gauge",
+      "name": "St. Vrain gauge (SVCLYOCO)",
+      "kind": "landmark",
+      "lat": 40.21804,
+      "lng": -105.26,
+      "blurb": "The state streamflow gauge below the confluence; the number on the river page comes from here.",
+      "href": "/outdoors/#river",
+      "url": "https://dwr.state.co.us/Tools/Stations/SVCLYOCO"
+    },
+    {
+      "id": "planet-bluegrass",
+      "name": "Planet Bluegrass",
+      "kind": "landmark",
+      "lat": 40.22841,
+      "lng": -105.2738,
+      "blurb": "The festival ranch on the river at the west end of Main.",
+      "href": "/explore/#music",
+      "url": "https://bluegrass.com/"
+    },
+    {
+      "id": "redstone-museum",
+      "name": "Lyons Redstone Museum",
+      "kind": "landmark",
+      "lat": 40.22568,
+      "lng": -105.26933,
+      "blurb": "Town history in the 1881 sandstone schoolhouse on High Street.",
+      "href": "/explore/#art"
+    },
+    {
+      "id": "old-stone-church",
+      "name": "Old Stone Church",
+      "kind": "landmark",
+      "lat": 40.22559,
+      "lng": -105.27011,
+      "blurb": "The 1894 sandstone church at 4th and High, on the National Register.",
+      "href": "/our-story/"
+    },
+    {
+      "id": "depot",
+      "name": "The Lyons Depot",
+      "kind": "landmark",
+      "lat": 40.22377,
+      "lng": -105.27099,
+      "blurb": "The 1885 railroad depot beside Sandstone Park.",
+      "href": "/our-story/"
+    },
+    {
+      "id": "library",
+      "name": "Lyons Regional Library",
+      "kind": "landmark",
+      "lat": 40.22377,
+      "lng": -105.27028,
+      "blurb": "451 4th Avenue: programs, meeting rooms and public restrooms.",
+      "href": "/community/"
+    },
+    {
+      "id": "town-hall",
+      "name": "Lyons Town Hall",
+      "kind": "landmark",
+      "lat": 40.22339,
+      "lng": -105.27116,
+      "blurb": "432 5th Avenue: the Board meets here on first and third Mondays.",
+      "href": "/civic/"
+    },
+    {
+      "id": "west-junction",
+      "name": "West junction: US 36 / CO 7",
+      "kind": "landmark",
+      "lat": 40.226,
+      "lng": -105.277,
+      "blurb": "Left for Colorado 7 and Allenspark, right for US 36 and Estes Park.",
+      "href": "/plan-a-visit/"
+    },
+    {
+      "id": "east-junction",
+      "name": "East junction: US 36 / CO 66",
+      "kind": "landmark",
+      "lat": 40.2215,
+      "lng": -105.2635,
+      "blurb": "Where the Longmont road meets Main Street.",
+      "href": "/plan-a-visit/"
+    }
+  ]
+}

@@ -24,9 +24,11 @@ The design system is Lyons' own, "red rock and river" (see the top of
 
 | Path | What it is |
 | --- | --- |
-| `/` | Home: hero, quick links, Town Board notice, upcoming events, explore cards, FAQ, community and visitor panels |
+| `/` | Home: hero, quick links, "This weekend" module with the live river chip, coming-up events, explore cards, FAQ, trip and live-here panels |
 | `/explore/` | Five places in walking order: Main Street, the river and parks, trails, public art and the museum, Planet Bluegrass |
-| `/eat-shop/` | Searchable, filterable business directory rendered from `src/data/businesses.json` |
+| `/eat-shop/` | Searchable, filterable business directory rendered from `src/data/businesses.json`, with a map |
+| `/stay/` | Lodging cards from the directory, the Town campground, festival-weekend advice, nearby towns, a map |
+| `/outdoors/` | The live St. Vrain level (Colorado DWR gauge SVCLYOCO) with plain-language tubing levels, the whitewater park, fishing, a trail table for five areas, a map |
 | `/events/` | Upcoming list, month calendar, annual fixtures and the weekly rhythm, from `src/data/events.json` |
 | `/plan-a-visit/` | Directions, parking passes, visitor center, seasons, lodging |
 | `/community/` | Community groups, public bodies, and a who-to-contact resident resources list |
@@ -58,6 +60,20 @@ JSON meta block, then its body. Photographs are placed with
   periodically so the calendar horizon rolls forward.
 - **A photo**: drop a JPEG into a folder and run `node tools/images.mjs <folder>`
   (needs `npm i sharp`), then credit it on `/privacy/#photos`.
+
+### Live data and the map
+
+- **River level**: `assets/js/guide.js` fetches the last two days of 15-minute
+  readings from the Colorado Division of Water Resources' public API for station
+  `SVCLYOCO` (Saint Vrain Creek at Lyons) and turns the latest one into a
+  plain-language level. Without scripting the chip and the panel show static text
+  and a link to the gauge. Thresholds live in the `reading()` function.
+- **Map**: Leaflet 1.9.4 is vendored in `src/assets/vendor/leaflet/` and loaded
+  only when a visitor opens a map, over OpenStreetMap tiles. Pins are built by
+  `build.py` from the `lat`/`lng` on each listing in `businesses.json` (geocoded
+  once with Nominatim) and from `src/data/places.json`; `{{pins:eat}}`,
+  `{{pins:stay}}` and `{{pins:outdoors}}` select subsets per page. A listing
+  with coordinates gets an "On the map" link automatically.
 
 ### The contact form
 
