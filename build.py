@@ -112,10 +112,19 @@ def picture(attrs):
     maxw, (w, h) = photo_dims(name)
     widths = [x for x in PHOTO_WIDTHS if x <= maxw]
     jpg = ", ".join(f"/assets/photos/{name}-{x}.jpg {x}w" for x in widths)
-    webp = ", ".join(f"/assets/photos/{name}-{x}.webp {x}w" for x in widths)
+    # WebP only when there is one at every width. On a grainy photograph webp
+    # can come out larger than the jpeg, and tools/images.mjs drops the whole
+    # set when it does; offering a partial srcset here would quietly hand a
+    # wide screen a smaller image, which costs more than the bytes save.
+    photo_dir = os.path.join(SRC, "assets", "photos")
+    has_webp = all(os.path.exists(os.path.join(photo_dir, f"{name}-{x}.webp")) for x in widths)
+    source = ""
+    if has_webp:
+        webp = ", ".join(f"/assets/photos/{name}-{x}.webp {x}w" for x in widths)
+        source = f'<source type="image/webp" srcset="{webp}" sizes="{sizes}">'
     fetch = ' fetchpriority="high"' if loading == "eager" else ""
     return (
-        f'<picture><source type="image/webp" srcset="{webp}" sizes="{sizes}">'
+        f'<picture>{source}'
         f'<img src="/assets/photos/{name}-{widths[0]}.jpg" srcset="{jpg}" sizes="{sizes}" '
         f'alt="{html.escape(alt, quote=True)}" width="{w}" height="{h}" loading="{loading}" decoding="async"{fetch}'
         f'{" style=" + chr(34) + html.escape(style, quote=True) + chr(34) if style else ""}></picture>'
@@ -248,7 +257,7 @@ def render_directory(data):
             if l.get("url"):
                 host = re.sub(r"^https?://(www\.)?", "", l["url"]).rstrip("/")
                 site = f'<a class="l-link" href="{html.escape(l["url"])}" rel="noopener" style="white-space:nowrap;font-size:.875rem">{html.escape(host)} <span aria-hidden="true">&#8599;</span></a>'
-            phone = f' &#183; <a href="tel:{re.sub(r"[^0-9+]", "", l["phone"])}" style="color:inherit">{html.escape(l["phone"])}</a>' if l.get("phone") else ""
+            phone = f' &#183; <a href="tel:{re.sub(r"[^0-9+]", "", l["phone"])}" style="color:inherit;white-space:nowrap">{html.escape(l["phone"])}</a>' if l.get("phone") else ""
             pin = f'<a class="l-link" href="#map" data-pin="{l["slug"]}" style="white-space:nowrap;font-size:.875rem">On the map <span aria-hidden="true">&#8595;</span></a>' if l.get("lat") else ""
             rows.append(
                 f'<article class="l-dir-row" data-dir-row data-slug="{l["slug"]}" data-cats="{" ".join(l["categories"])}" data-search="{html.escape(search, quote=True)}">'
@@ -391,6 +400,10 @@ def denver_iso(date_str, hhmm):
         return f"{date_str}T{hhmm}:00-06:00"
 
 
+def hhmm(minutes):
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
 def events_ld(occ, days=60, cap=40):
     items = []
     end = TODAY + dt.timedelta(days=days)
@@ -398,14 +411,23 @@ def events_ld(occ, days=60, cap=40):
         d = dt.date.fromisoformat(o["date"])
         if d < TODAY or d > end:
             continue
-        ev = {
-            "@type": "Event",
-            "name": o["title"],
-            "startDate": denver_iso(o["date"], o.get("sort", "09:00")),
+        # Same reading of the organizer's time string the calendar feed uses,
+        # so a listing, its VEVENT and its rich result all agree: a published
+        # end is honoured, a start with none gets an hour, and a time that
+        # cannot be read leaves a date rather than a guessed hour.
+        times = parse_time(o.get("time"))
+        ev = {"@type": "Event", "name": o["title"]}
+        if times:
+            start, finish = times
+            ev["startDate"] = denver_iso(o["date"], hhmm(start))
+            ev["endDate"] = denver_iso(o["date"], hhmm(finish if finish is not None else min(start + 60, 24 * 60 - 1)))
+        else:
+            ev["startDate"] = o["date"]
+        ev.update({
             "eventStatus": "https://schema.org/EventScheduled",
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
             "location": {"@type": "Place", "name": o.get("venue", "Lyons, Colorado"), "address": {"@type": "PostalAddress", "streetAddress": o.get("address", ""), "addressLocality": "Lyons", "addressRegion": "CO", "postalCode": "80540", "addressCountry": "US"}},
-        }
+        })
         if o.get("organizer"):
             ev["organizer"] = {"@type": "Organization", "name": o["organizer"]}
         if o.get("detail"):
@@ -705,6 +727,40 @@ def jsonld(meta, extra=None):
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False).replace("</", "<\\/")
 
 
+def check_form_csp():
+    """The CSP in vercel.json names the origins the browser may reach. A form
+    endpoint is reached two ways -- fetch() for visitors with scripting, and an
+    ordinary POST for those without -- so its origin has to appear in both
+    connect-src and form-action or the form fails silently in production while
+    working perfectly on a local file server. Rather than leave that to be
+    discovered after launch, the build refuses to produce a site that would do
+    it."""
+    if not FORM_ENDPOINT:
+        return
+    from urllib.parse import urlparse
+    origin = urlparse(FORM_ENDPOINT)
+    origin = f"{origin.scheme}://{origin.netloc}"
+    conf = os.path.join(ROOT, "vercel.json")
+    if not os.path.exists(conf):
+        return
+    csp = ""
+    for rule in json.loads(read(conf)).get("headers", []):
+        for h in rule.get("headers", []):
+            if h.get("key", "").lower() == "content-security-policy":
+                csp = h["value"]
+    if not csp:
+        return
+    missing = [d for d in ("connect-src", "form-action")
+               if origin not in csp.split(d, 1)[-1].split(";", 1)[0]]
+    if missing:
+        raise SystemExit(
+            f"build.py: FORM_ENDPOINT is {FORM_ENDPOINT}, but the "
+            f"Content-Security-Policy in vercel.json does not allow {origin} in "
+            f"{' and '.join(missing)}.\nAdd it there, or submissions will be "
+            f"blocked in the browser once this deploys."
+        )
+
+
 def contact_form():
     """The form's attributes, and the note shown when there is no endpoint.
 
@@ -735,6 +791,7 @@ def build():
         if os.path.exists(p):
             shutil.copy(p, os.path.join(OUT, f))
 
+    check_form_csp()
     layout = read(os.path.join(SRC, "layout.html"))
     form_attrs, form_hidden, form_noscript = contact_form()
     events = load_json("events.json")
@@ -792,6 +849,13 @@ def build():
             "title": html.escape(meta["title"], quote=True),
             "description": html.escape(meta["description"], quote=True),
             "path": meta["path"],
+            # One robots directive per page, not two that contradict each
+            # other, and no canonical on the 404: it is served at whatever
+            # address was missed, so it has no address of its own.
+            "robots": ('<meta name="robots" content="noindex, follow">' if meta.get("noindex")
+                       else '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">'),
+            "canonical": ('' if meta.get("canonical") is False
+                          else f'<link rel="canonical" href="{SITE}{meta["path"]}">'),
             "og_image_url": og_image_url(meta.get("og_image", "downtown")),
             "og_alt": html.escape(meta.get("og_alt", "Main Street in Lyons, Colorado, with the red sandstone hogback behind"), quote=True),
             "head_extra": meta.get("head_extra", ""),
@@ -828,6 +892,17 @@ def build():
           + "</urlset>\n")
     print(f"built {len(urls)} pages into public/ ({len(occ)} event occurrences, "
           f"{ics_count} calendar entries, reviewed {REVIEWED})")
+
+    # Gaps in the directory that cost a visitor something, said out loud once a
+    # build rather than left to be noticed. A listing with no coordinates is
+    # simply absent from the maps, which is not visible from the page itself.
+    nopin = [l["name"] for l in biz["listings"] if not l.get("lat")]
+    nourl = [l["name"] for l in biz["listings"] if not l.get("url")]
+    for label, names in (("no coordinates, so absent from the maps", nopin),
+                         ("no link", nourl)):
+        if names:
+            print(f"  note: {len(names)} listing{'' if len(names) == 1 else 's'} with {label}: "
+                  + ", ".join(sorted(names)))
 
 
 if __name__ == "__main__":

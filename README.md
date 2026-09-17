@@ -17,7 +17,7 @@ The design system is Lyons' own, "red rock and river" (see the top of
   head), a thin teal *river line* at the two big page transitions, a hogback
   silhouette in the hero, and photographs cut like flagstone with a chamfer on
   two corners. No rounded corners anywhere.
-- **Photography**: 31 Creative Commons and public-domain photographs of Lyons,
+- **Photography**: 30 Creative Commons and public-domain photographs of Lyons,
   each credited on `/privacy/#photos`.
 
 ## Pages
@@ -123,8 +123,38 @@ need no stamp. The one exception is the vendored Leaflet under
 `/assets/vendor/`: it is version-pinned, so swapping it means renaming the
 folder or clearing the CDN cache.
 
+`vercel.json` also sets the security headers. The Content-Security-Policy is
+strict — `script-src 'self'` with no `unsafe-inline`, because every executable
+script is a file and the inline blocks are `application/json` data — and names
+the only two third parties the pages talk to: `dwr.state.co.us` for the river
+gauge and `tile.openstreetmap.org` for map tiles. Anything new the pages reach
+for has to be added there, and `build.py` refuses to build if `FORM_ENDPOINT`
+is set to an origin the policy would block.
+
+### Keeping it current
+
+`.github/workflows/rebuild.yml` redeploys the site every morning. This matters
+more than it looks: the build bakes today's date into "this weekend", into how
+far the weekly fixtures are expanded, and into the sitemap and the footer, so a
+site deployed once and left alone stops rolling forward. It needs one
+repository secret, `VERCEL_DEPLOY_HOOK` — create a Deploy Hook in the Vercel
+project under Settings → Git → Deploy Hooks and paste its URL in.
+
+`.github/workflows/build.yml` runs `build.py` on every push and checks that
+every page, photo, stylesheet and script a page references was actually
+written, so a broken build shows up on the branch rather than in production.
+
 ## Credits
 
-Photographs are from Wikimedia Commons under CC BY-SA 3.0 and public domain;
-each is credited on the privacy page. Fonts are Instrument Serif and Instrument
-Sans (SIL OFL), self-hosted.
+Photographs are from Wikimedia Commons and Flickr under Creative Commons
+licences and public domain; each is credited, with its licence, on the privacy
+page.
+
+Type is Fraunces (Undercase Type) for display and Bricolage Grotesque (Mathieu
+Triay) for everything else, both self-hosted Latin subsets under the SIL Open
+Font License. The licence requires its text and copyright notice to travel with
+the files, so both sit next to them in `src/assets/fonts/` and ship with the
+site; `src/assets/fonts/README.txt` says which is which.
+
+The map is Leaflet 1.9.4 (BSD-2-Clause, vendored under `src/assets/vendor/`)
+over OpenStreetMap tiles, © OpenStreetMap contributors.

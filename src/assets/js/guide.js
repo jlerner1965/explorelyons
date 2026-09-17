@@ -80,6 +80,17 @@
     var since = new Date(); since.setDate(since.getDate() - 2);
     var mmddyyyy = String(since.getMonth() + 1).padStart(2, '0') + '/' + String(since.getDate()).padStart(2, '0') + '/' + since.getFullYear();
     var url = 'https://dwr.state.co.us/Rest/GET/api/v2/telemetrystations/telemetrytimeseriesraw/?format=json&abbrev=SVCLYOCO&parameter=DISCHRG&startDate=' + encodeURIComponent(mmddyyyy);
+    // The gauge publishes Denver wall-clock with no offset, e.g.
+    // "2026-09-17T09:15:00". Handing that to Date() makes it the viewer's own
+    // local time, so a reading eight hours old reads as minutes old in London.
+    // The clock is taken straight from the string instead, and labelled.
+    function readAt(s) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(s || '');
+      if (!m) return '';
+      var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var h = Number(m[4]);
+      return MON[Number(m[2]) - 1] + ' ' + Number(m[3]) + ', ' + (h % 12 || 12) + ':' + m[5] + ' ' + (h < 12 ? 'am' : 'pm') + ' MT';
+    }
     function reading(cfs) {
       if (cfs < 40) return { word: 'Low', note: 'Too shallow for tubes; fine for wading, fishing and the whitewater-park rocks.' };
       if (cfs < 100) return { word: 'Mellow', note: 'Easy tubing through LaVern M. Johnson Park; kids’ water with a life jacket.' };
@@ -93,13 +104,13 @@
       if (!rows.length) throw new Error('no data');
       var last = rows[rows.length - 1];
       var cfs = Number(last.measValue);
-      var when = new Date(last.measDateTime);
+      var when = readAt(last.measDateTime);
       var r = reading(cfs);
       els.forEach(function (el) {
         var v = el.querySelector('[data-gauge-value]'); if (v) v.textContent = Math.round(cfs).toLocaleString('en-US') + ' cfs';
         var w = el.querySelector('[data-gauge-word]'); if (w) w.textContent = r.word;
         var n = el.querySelector('[data-gauge-note]'); if (n) n.textContent = r.note;
-        var t = el.querySelector('[data-gauge-time]'); if (t) t.textContent = 'Read ' + when.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' at the Lyons gauge';
+        var t = el.querySelector('[data-gauge-time]'); if (t && when) t.textContent = 'Read ' + when + ' at the Lyons gauge';
         el.setAttribute('data-gauge-level', r.word.toLowerCase().replace(' ', '-'));
         el.classList.add('l-gauge--live');
       });

@@ -41,7 +41,8 @@
       if (!d) { html += '<div class="l-cal-day l-cal-day--out" aria-hidden="true"></div>'; return; }
       var k = iso(d), n = (byDate[k] || []).length;
       var cls = 'l-cal-day' + (n ? ' l-cal-day--has' : '') + (k === todayIso ? ' l-cal-day--today' : '') + (k === selected ? ' l-cal-day--on' : '');
-      if (n) html += '<button type="button" class="' + cls + '" data-day="' + k + '" aria-label="' + d.getDate() + ', ' + n + (n === 1 ? ' event' : ' events') + '"><span class="l-cal-n">' + d.getDate() + '</span><span class="l-cal-dot"></span><span class="l-cal-count">' + n + '</span></button>';
+      var when = months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+      if (n) html += '<button type="button" class="' + cls + '" data-day="' + k + '" aria-label="' + when + ', ' + n + (n === 1 ? ' event' : ' events') + '"><span class="l-cal-n">' + d.getDate() + '</span><span class="l-cal-dot"></span><span class="l-cal-count">' + n + '</span></button>';
       else html += '<div class="' + cls + '"><span class="l-cal-n">' + d.getDate() + '</span></div>';
     });
     grid.innerHTML = html;
