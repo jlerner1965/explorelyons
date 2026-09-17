@@ -276,7 +276,7 @@ def build():
     if os.path.exists(OUT):
         shutil.rmtree(OUT)
     shutil.copytree(os.path.join(SRC, "assets"), os.path.join(OUT, "assets"))
-    for f in ("favicon.svg", "apple-touch-icon.png", "robots.txt", "CNAME", "404.html"):
+    for f in ("favicon.svg", "apple-touch-icon.png", "robots.txt"):
         p = os.path.join(SRC, "static", f)
         if os.path.exists(p):
             shutil.copy(p, os.path.join(OUT, f))
