@@ -1,0 +1,41 @@
+# Vercel runs the same build on deploy; running it here too means a change that
+# breaks it is caught on the branch rather than in production. build.py raises
+# SystemExit on a missing photo, a page without a meta block, or a form
+# endpoint the Content-Security-Policy would block, so a plain run is the test.
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Check the contact endpoint compiles
+        # It is deployed straight from source, so a syntax error in it would
+        # otherwise only surface the first time somebody submits the form.
+        run: python3 -m py_compile api/contact.py
+      - name: Build the site
+        run: python3 build.py
+      - name: Check every page, photo and feed was written
+        run: |
+          python3 - <<'PY'
+          import glob, os, sys, re
+          pages = glob.glob('public/**/*.html', recursive=True)
+          assert len(pages) >= 15, f'only {len(pages)} pages written'
+          for required in ('public/sitemap.xml', 'public/events.ics', 'public/robots.txt', 'public/404.html'):
+              assert os.path.exists(required), f'missing {required}'
+          missing = set()
+          for p in pages:
+              html = open(p, encoding='utf-8').read()
+              for url in re.findall(r'/assets/[A-Za-z0-9._/-]+\.(?:jpg|webp|css|js|woff2)', html):
+                  if not os.path.exists('public' + url):
+                      missing.add(url)
+          assert not missing, 'referenced but not written: ' + ', '.join(sorted(missing))
+          print(f'{len(pages)} pages, every referenced asset present')
+          PY

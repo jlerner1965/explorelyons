@@ -6,7 +6,7 @@
 // width the source can fill. The file name is the slug the pages refer to, so
 // overwriting an existing slug replaces that photo everywhere it appears.
 import sharp from 'sharp';
-import { readdirSync, mkdirSync, readFileSync } from 'node:fs';
+import { readdirSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { basename, extname, join, relative } from 'node:path';
 import { execSync } from 'node:child_process';
 
@@ -52,12 +52,27 @@ for (const file of readdirSync(src).sort()) {
     console.error(`  skipped ${file} — ${meta.width}px wide, under the 400px minimum`);
     continue;
   }
+  // WebP usually wins, but on a grainy or heavily textured photograph it comes
+  // out bigger than the jpeg at the same quality. Writing it anyway would make
+  // every browser that prefers webp download the larger file, so each width is
+  // weighed and the whole set is kept or dropped together -- a partial set
+  // would leave the build offering a smaller image to a wide screen.
+  const webps = [];
+  let webpWins = true;
   for (const w of usable) {
-    await image.clone().resize({ width: w }).jpeg({ quality: 78, mozjpeg: true }).toFile(join(out, `${name}-${w}.jpg`));
-    await image.clone().resize({ width: w }).webp({ quality: 74 }).toFile(join(out, `${name}-${w}.webp`));
+    const jpg = await image.clone().resize({ width: w }).jpeg({ quality: 78, mozjpeg: true }).toBuffer();
+    const webp = await image.clone().resize({ width: w }).webp({ quality: 74 }).toBuffer();
+    writeFileSync(join(out, `${name}-${w}.jpg`), jpg);
+    webps.push([w, webp]);
+    if (webp.length >= jpg.length) webpWins = false;
+  }
+  for (const [w, buf] of webps) {
+    const p = join(out, `${name}-${w}.webp`);
+    if (webpWins) writeFileSync(p, buf);
+    else rmSync(p, { force: true });
   }
   wrote++;
-  console.log(`${name}  ${meta.width}x${meta.height}  ->  ${usable.join(', ')}`);
+  console.log(`${name}  ${meta.width}x${meta.height}  ->  ${usable.join(', ')}${webpWins ? '  (jpeg + webp)' : '  (jpeg only \u2014 webp came out larger)'}`);
   if (meta.width < 1400) console.log(`  note: under 1400px, so it will soften on wide screens and in link previews`);
   const where = uses.get(name);
   if (where) console.log(`  already used in: ${[...where].join(', ')} — check the alt text still describes it`);
