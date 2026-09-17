@@ -1,9 +1,24 @@
 # ExploreLyons.com
 
-An independent community guide to Lyons, Colorado, in the editorial style of
-[TownofNiwot.com](https://townofniwot.com/): a light masthead with a rail-and-ties
-wordmark, Instrument Serif and Instrument Sans, an evergreen / sandstone / gold
-palette, square corners everywhere, and every fact linked to its source.
+An independent community guide to Lyons, Colorado. The page structure and
+editorial posture follow [TownofNiwot.com](https://townofniwot.com/): a light
+sticky masthead, numbered quick links, a dark events band, framed photographs,
+definition rows, and every fact linked to its official source.
+
+The design system is Lyons' own, "red rock and river" (see the top of
+`src/assets/css/guide.css`):
+
+- **Colour** from the Lyons Formation sandstone (`--l-sandstone`, `--l-redrock`,
+  `--l-canyon`), the St. Vrain (`--l-river`, `--l-river-deep`), festival gold
+  and warm sandstone-dust paper grounds.
+- **Type**: Fraunces (variable, with italics) for display and headings,
+  Bricolage Grotesque for body, labels and navigation. Both self-hosted.
+- **Devices**: three-band *strata* rules (under the wordmark and every section
+  head), a thin teal *river line* at the two big page transitions, a hogback
+  silhouette in the hero, and photographs cut like flagstone with a chamfer on
+  two corners. No rounded corners anywhere.
+- **Photography**: 31 Creative Commons and public-domain photographs of Lyons,
+  each credited on `/privacy/#photos`.
 
 ## Pages
 
