@@ -50,23 +50,23 @@
 </div>
 <div>
 <label class="l-label" for="v-name" style="color:var(--l-gold-lt)">Name of the business, event or page</label>
-<input class="l-field" id="v-name" name="subject" type="text" required placeholder="e.g. Explore &#8212; trails">
+<input class="l-field" id="v-name" maxlength="200" name="subject" type="text" required placeholder="e.g. Explore &#8212; trails">
 </div>
 <div>
 <label class="l-label" for="v-page" style="color:var(--l-gold-lt)">Page this is about <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
-<input class="l-field" id="v-page" name="page" type="text" autocomplete="off" placeholder="e.g. /eat-shop/ or /events/">
+<input class="l-field" id="v-page" maxlength="200" name="page" type="text" autocomplete="off" placeholder="e.g. /eat-shop/ or /events/">
 </div>
 <div>
 <label class="l-label" for="v-detail" style="color:var(--l-gold-lt)">Details</label>
-<textarea class="l-field" id="v-detail" name="detail" rows="5" required></textarea>
+<textarea class="l-field" id="v-detail" name="detail" rows="5" maxlength="4000" required></textarea>
 </div>
 <div>
 <label class="l-label" for="v-src" style="color:var(--l-gold-lt)">Link to your own page or the source <span data-source-note style="text-transform:none;letter-spacing:0">(optional)</span></label>
-<input class="l-field" id="v-src" name="source" type="url" inputmode="url" autocomplete="url" placeholder="https://">
+<input class="l-field" id="v-src" maxlength="500" name="source" type="url" inputmode="url" autocomplete="url" placeholder="https://">
 </div>
 <div>
 <label class="l-label" for="v-email" style="color:var(--l-gold-lt)">Your email</label>
-<input class="l-field" id="v-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Used only to reply about this submission">
+<input class="l-field" id="v-email" maxlength="200" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Used only to reply about this submission">
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center">
 <button class="l-btn" type="submit" style="cursor:pointer;font-family:inherit">Send submission</button>
@@ -75,6 +75,7 @@
 <p class="l-small" style="margin:0;max-width:54ch;color:var(--l-sage-lt)">By sending this you agree that the editor may check it against its source and publish what it supports, with the date it was verified. Sending it does not guarantee publication, and nothing is published without review. Your email is optional and is used only to reply about this submission. <a href="/privacy/">How submissions are handled</a>.</p>
 </form>
 <template data-form-success><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--l-gold-lt);max-width:54ch;color:var(--l-white)">Thank you &#8212; your submission has been sent. It will be checked against its source before anything is published.</p></template>
+<template data-form-error><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--l-gold-lt);max-width:54ch;color:var(--l-white)">That did not send. <span data-error-why>Something went wrong between here and the mail service.</span> Write to <a href="mailto:editor@explorelyons.com" style="color:var(--l-gold-lt)">editor@explorelyons.com</a> instead and it will go in by hand.</p></template>
 <template data-form-unavailable><p role="status" data-message style="margin:24px 0 0;padding-top:16px;border-top:3px solid var(--l-gold-lt);max-width:54ch;color:var(--l-white)">This form is not connected to a mail service yet, so nothing was sent. Write to <a href="mailto:editor@explorelyons.com" style="color:var(--l-gold-lt)">editor@explorelyons.com</a> instead. For anything official, the <a href="/community/#resources">responsible body</a> is the reliable contact.</p></template>
 </div>
 <div>

@@ -30,13 +30,18 @@ TODAY = dt.date.today()
 REVIEWED = TODAY.strftime("%B %Y")
 ICS_STAMP = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
-# Where the contact form posts. Formspree, Basin, Formsubmit and the rest all
-# accept a plain POST of the form fields, so any of them works here: paste the
-# endpoint URL and both paths start working at once -- fetch() for visitors
-# with scripting, and an ordinary form POST (landing on /thanks/) for those
-# without. Left empty, the form says plainly that nothing was sent and offers
-# the editor's address instead, rather than pretending to deliver.
-FORM_ENDPOINT = ""
+# Where the contact form posts. api/contact.py is this site's own endpoint: it
+# validates the submission and hands it to Resend, and being same-origin it
+# needs nothing added to the Content-Security-Policy. An off-site form service
+# (Formspree, Basin, Formsubmit) works here just as well -- they all take a
+# plain POST of the fields -- but its origin has to be allowed in the policy,
+# and check_form_csp() below will not let the site build until it is.
+#
+# Either way both paths work: fetch() for visitors with scripting, and an
+# ordinary form POST landing on /thanks/ for those without. Left empty, the
+# form says plainly that nothing was sent and offers the editor's address
+# instead of pretending to deliver.
+FORM_ENDPOINT = "/api/contact"
 
 NAV = [
     ("explore", "/explore/", "Explore"),
@@ -738,8 +743,10 @@ def check_form_csp():
     if not FORM_ENDPOINT:
         return
     from urllib.parse import urlparse
-    origin = urlparse(FORM_ENDPOINT)
-    origin = f"{origin.scheme}://{origin.netloc}"
+    parts = urlparse(FORM_ENDPOINT)
+    if not parts.netloc:
+        return  # same-origin: 'self' in the policy already covers it
+    origin = f"{parts.scheme}://{parts.netloc}"
     conf = os.path.join(ROOT, "vercel.json")
     if not os.path.exists(conf):
         return
@@ -770,7 +777,12 @@ def contact_form():
     if FORM_ENDPOINT:
         attrs = (f'data-endpoint="{html.escape(FORM_ENDPOINT, quote=True)}" method="post" '
                  f'action="{html.escape(FORM_ENDPOINT, quote=True)}"')
-        hidden = f'<input type="hidden" name="_next" value="{SITE}/thanks/">'
+        # _next is how the off-site form services are told where to send a
+        # visitor who has no scripting. api/contact.py redirects to /thanks/
+        # itself, and deliberately ignores any target given in the request, so
+        # the field is only worth sending to a service that expects it.
+        offsite = FORM_ENDPOINT.startswith(("http://", "https://"))
+        hidden = f'<input type="hidden" name="_next" value="{SITE}/thanks/">' if offsite else ""
         note = ""
     else:
         attrs = 'data-endpoint=""'

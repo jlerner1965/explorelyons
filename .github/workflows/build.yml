@@ -16,6 +16,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Check the contact endpoint compiles
+        # It is deployed straight from source, so a syntax error in it would
+        # otherwise only surface the first time somebody submits the form.
+        run: python3 -m py_compile api/contact.py
       - name: Build the site
         run: python3 build.py
       - name: Check every page, photo and feed was written

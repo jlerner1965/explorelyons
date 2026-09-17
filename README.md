@@ -96,16 +96,39 @@ at a guessed hour. The feed carries a `VTIMEZONE` for `America/Denver`, so a
 
 ### The contact form
 
-`FORM_ENDPOINT` at the top of `build.py` is the only thing to set. Paste a
-Formspree (or Basin, Formsubmit, …) endpoint there and both paths start
-working: `fetch()` for visitors with scripting, and an ordinary form POST for
-those without, which lands on `/thanks/` via the `_next` field. Left empty, the
-form says plainly that nothing was sent and gives the editor's email address
-rather than pretending to deliver.
+Submissions go to `api/contact.py`, the site's own endpoint, which Vercel
+deploys as `/api/contact`. It checks the honeypot, requires a name and some
+detail, holds each field to a length, and hands the rest to
+[Resend](https://resend.com). Standard library only, so there is no
+`requirements.txt`. Both paths work: `fetch()` for visitors with scripting, and
+an ordinary form POST that the endpoint answers with a redirect to `/thanks/`
+for those without. The redirect target is fixed in the code and deliberately
+not read from the request, which is what keeps it from being an open redirect.
+
+**Two things to set before it works:**
+
+1. **`RESEND_API_KEY`** in the Vercel project's environment variables. Without
+   it the form reports that it is not connected — a 503 and a plain sentence —
+   rather than losing a submission quietly.
+2. **Verify `explorelyons.com` in Resend**, which means adding the DKIM and SPF
+   records it gives you to the domain's DNS. Until that is done Resend will
+   only deliver to the address that owns the account, so the editor will not
+   get anything sent from `form@explorelyons.com`.
+
+Optional: `CONTACT_TO` (default `editor@explorelyons.com`) and `CONTACT_FROM`
+(default `form@explorelyons.com`, which is the address the DNS verifies).
 
 **This is the one thing the site cannot launch without.** "Submit a listing"
 is in the nav and footer of every page, and it is the only route for
-corrections.
+corrections. After the first deploy, send one submission with scripting on and
+one with it off and check both arrive.
+
+An off-site form service works here instead if you would rather not run the
+endpoint: put its URL in `FORM_ENDPOINT` at the top of `build.py` and the form
+posts there, `_next` included. Its origin has to be added to `connect-src` and
+`form-action` in `vercel.json`, and the build will refuse — by name — until it
+is. Setting `FORM_ENDPOINT` to `""` puts the form back to saying plainly that
+nothing was sent and giving the editor's address.
 
 ## Deploy
 

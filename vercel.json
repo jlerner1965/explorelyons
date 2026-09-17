@@ -6,6 +6,9 @@
   "framework": null,
   "cleanUrls": true,
   "trailingSlash": true,
+  "rewrites": [
+    { "source": "/api/contact/", "destination": "/api/contact" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

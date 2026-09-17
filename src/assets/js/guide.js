@@ -135,20 +135,40 @@
       if (srcNote) srcNote.textContent = req ? '(required for corrections)' : '(optional)';
     }
     if (kind) { kind.addEventListener('change', syncSource); syncSource(); }
+    function show(which, why) {
+      var tpl = document.querySelector('template[data-form-' + which + ']');
+      if (!tpl || form.querySelector('[data-message]')) return;
+      var node = tpl.content.cloneNode(true);
+      var slot = node.querySelector('[data-error-why]');
+      if (slot && why) slot.textContent = why;
+      form.appendChild(node);
+    }
     form.addEventListener('submit', function (e) {
       if (!endpoint) {
         e.preventDefault();
-        var tpl = document.querySelector('template[data-form-unavailable]');
-        if (tpl && !form.querySelector('[data-message]')) form.appendChild(tpl.content.cloneNode(true));
+        show('unavailable');
         return;
       }
-      if (!window.fetch) return; // plain POST
+      if (!window.fetch) return; // an ordinary POST, which the endpoint handles
       e.preventDefault();
       var btn = form.querySelector('button[type=submit]');
       if (btn) btn.disabled = true;
-      fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) })
-        .then(function (r) { if (!r.ok) throw new Error(r.status); form.reset(); syncSource(); var t = document.querySelector('template[data-form-success]'); if (t) form.appendChild(t.content.cloneNode(true)); })
-        .catch(function () { var t = document.querySelector('template[data-form-unavailable]'); if (t && !form.querySelector('[data-message]')) form.appendChild(t.content.cloneNode(true)); })
+      // URLSearchParams rather than the FormData itself: that would go up as
+      // multipart, and the endpoint only has to understand one encoding.
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new URLSearchParams(new FormData(form))
+      })
+        .then(function (r) {
+          return r.json().catch(function () { return {}; }).then(function (d) {
+            if (!r.ok || d.ok === false) { var err = new Error('rejected'); err.why = d.error; throw err; }
+            form.reset(); syncSource(); show('success');
+          });
+        })
+        // The endpoint says what was wrong with a submission it refused, which
+        // is worth repeating; a network failure has nothing to add.
+        .catch(function (err) { show('error', err && err.why); })
         .then(function () { if (btn) btn.disabled = false; });
     });
   }
