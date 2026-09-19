@@ -23,6 +23,8 @@
     { "source": "/contact{/}?", "destination": "https://insidelyons.com/contact/", "permanent": true },
     { "source": "/privacy{/}?", "destination": "https://insidelyons.com/privacy/", "permanent": true },
     { "source": "/sitemap.xml", "destination": "https://insidelyons.com/sitemap-index.xml", "permanent": true },
+    { "source": "/", "destination": "https://insidelyons.com/", "permanent": true },
+    { "source": "/:path*/", "destination": "https://insidelyons.com/:path*/", "permanent": true },
     { "source": "/:path*", "destination": "https://insidelyons.com/:path*", "permanent": true }
   ],
   "headers": [
