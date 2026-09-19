@@ -9,6 +9,22 @@
   "rewrites": [
     { "source": "/api/contact/", "destination": "/api/contact" }
   ],
+  "redirects": [
+    { "source": "/explore{/}?", "destination": "https://insidelyons.com/things-to-do/", "permanent": true },
+    { "source": "/eat-shop{/}?", "destination": "https://insidelyons.com/eat-drink/", "permanent": true },
+    { "source": "/stay{/}?", "destination": "https://insidelyons.com/things-to-do/", "permanent": true },
+    { "source": "/outdoors{/}?", "destination": "https://insidelyons.com/articles/trails-and-the-river/", "permanent": true },
+    { "source": "/itineraries{/}?", "destination": "https://insidelyons.com/things-to-do/", "permanent": true },
+    { "source": "/plan-a-visit{/}?", "destination": "https://insidelyons.com/things-to-do/", "permanent": true },
+    { "source": "/our-story{/}?", "destination": "https://insidelyons.com/articles/lyons-history-sandstone-railroad-river/", "permanent": true },
+    { "source": "/civic{/}?", "destination": "https://insidelyons.com/moving-here/", "permanent": true },
+    { "source": "/community{/}?", "destination": "https://insidelyons.com/moving-here/", "permanent": true },
+    { "source": "/events{/}?", "destination": "https://insidelyons.com/events/", "permanent": true },
+    { "source": "/contact{/}?", "destination": "https://insidelyons.com/contact/", "permanent": true },
+    { "source": "/privacy{/}?", "destination": "https://insidelyons.com/privacy/", "permanent": true },
+    { "source": "/sitemap.xml", "destination": "https://insidelyons.com/sitemap-index.xml", "permanent": true },
+    { "source": "/:path*", "destination": "https://insidelyons.com/:path*", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
