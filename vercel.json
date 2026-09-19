@@ -17,7 +17,7 @@
     { "source": "/itineraries{/}?", "destination": "https://insidelyons.com/things-to-do/", "permanent": true },
     { "source": "/plan-a-visit{/}?", "destination": "https://insidelyons.com/things-to-do/", "permanent": true },
     { "source": "/our-story{/}?", "destination": "https://insidelyons.com/articles/lyons-history-sandstone-railroad-river/", "permanent": true },
-    { "source": "/civic{/}?", "destination": "https://insidelyons.com/moving-here/", "permanent": true },
+    { "source": "/civic{/}?", "destination": "https://insidelyons.com/articles/who-governs-lyons/", "permanent": true },
     { "source": "/community{/}?", "destination": "https://insidelyons.com/moving-here/", "permanent": true },
     { "source": "/events{/}?", "destination": "https://insidelyons.com/events/", "permanent": true },
     { "source": "/contact{/}?", "destination": "https://insidelyons.com/contact/", "permanent": true },
